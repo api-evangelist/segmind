@@ -18,6 +18,8 @@ common:
     url: https://github.com/segmind
   - type: LinkedIn
     url: https://www.linkedin.com/company/segmind
+  - type: LLMsTxt
+    url: https://www.segmind.com/llms.txt
 apis:
   - aid: segmind:segmind
     name: Segmind
