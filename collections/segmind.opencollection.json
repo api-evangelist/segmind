@@ -1,0 +1,251 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Segmind API",
+    "version": "1"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "x-api-key",
+      "value": "{{x-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Inference",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Synchronous model inference",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.segmind.com/v1/:model_name",
+            "params": [
+              {
+                "name": "model_name",
+                "value": "",
+                "type": "path",
+                "description": "Model identifier, e.g. fast-flux-schnell"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit a request to a model and wait for the response. Suitable for models that complete within roughly 60 seconds."
+        },
+        {
+          "info": {
+            "name": "Asynchronous model inference",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.segmind.com/v2/:model_name",
+            "params": [
+              {
+                "name": "model_name",
+                "value": "",
+                "type": "path"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submit an async request; returns a request_id."
+        },
+        {
+          "info": {
+            "name": "Get lightweight request status",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.segmind.com/v2/requests/:request_id/status",
+            "params": [
+              {
+                "name": "request_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get lightweight request status"
+        },
+        {
+          "info": {
+            "name": "Get full async result",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.segmind.com/v2/requests/:request_id",
+            "params": [
+              {
+                "name": "request_id",
+                "value": "",
+                "type": "path"
+              }
+            ]
+          },
+          "docs": "Get full async result"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Retrieve current credit balance",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.segmind.com/v1/get-user-credits"
+          },
+          "docs": "Retrieve current credit balance"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Fine-tuning",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Initiate a fine-tuning job",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.segmind.com/finetune/request/submit",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiate a fine-tuning job"
+        },
+        {
+          "info": {
+            "name": "Get details for a fine-tune request",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.segmind.com/finetune/request/details",
+            "params": [
+              {
+                "name": "request_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Get details for a fine-tune request"
+        },
+        {
+          "info": {
+            "name": "List fine-tuning requests",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.segmind.com/finetune/request/list"
+          },
+          "docs": "List fine-tuning requests"
+        },
+        {
+          "info": {
+            "name": "Update fine-tuned model access (public/private)",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://api.segmind.com/finetune/request/access-update",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update fine-tuned model access (public/private)"
+        },
+        {
+          "info": {
+            "name": "Obtain a pre-signed upload URL for fine-tune data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.segmind.com/finetune/request/upload/pre-signed-url"
+          },
+          "docs": "Obtain a pre-signed upload URL for fine-tune data"
+        },
+        {
+          "info": {
+            "name": "Download trained model weights",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.segmind.com/finetune/request/file/download",
+            "params": [
+              {
+                "name": "request_id",
+                "value": "",
+                "type": "query"
+              }
+            ]
+          },
+          "docs": "Download trained model weights"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Storage",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload a file as a reusable asset (workflows-api host)",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.segmind.com/upload-asset",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "docs": "Upload a file as a reusable asset (workflows-api host)"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
