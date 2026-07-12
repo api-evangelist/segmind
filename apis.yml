@@ -14,12 +14,18 @@ url: >-
   https://raw.githubusercontent.com/api-evangelist/segmind/refs/heads/main/apis.yml
 specificationVersion: '0.19'
 common:
+  - type: DomainSecurity
+    url: security/segmind-domain-security.yml
+  - type: Authentication
+    url: authentication/segmind-authentication.yml
   - type: GitHubOrganization
     url: https://github.com/segmind
   - type: LinkedIn
     url: https://www.linkedin.com/company/segmind
   - type: LlmsText
     url: https://www.segmind.com/llms.txt
+  - type: Blog
+    url: https://blog.segmind.com/feed
 apis:
   - aid: segmind:segmind
     name: Segmind
