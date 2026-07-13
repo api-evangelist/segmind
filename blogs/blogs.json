@@ -1,0 +1,21 @@
+{
+  "repo": "segmind",
+  "feeds": [
+    {
+      "source": "https://blog.segmind.com/feed",
+      "feed_url": "https://blog.segmind.com/feed",
+      "title": "",
+      "saved": 0,
+      "method": "feed"
+    },
+    {
+      "source": "https://www.segmind.com/llms.txt",
+      "feed_url": "https://www.segmind.com/llms.txt",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "fetched": "2026-07-11T11:50:51Z",
+  "post_count": 15
+}
