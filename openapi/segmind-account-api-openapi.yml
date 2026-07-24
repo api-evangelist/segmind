@@ -1,0 +1,41 @@
+openapi: 3.1.0
+info:
+  title: Segmind Account API
+  description: Segmind provides API access to top AI models for rapid prototyping and deployment, including synchronous and asynchronous model inference, fine-tuning, and asset upload. Authenticated with an API key header.
+  version: '1'
+  contact:
+    name: Segmind
+    url: https://www.segmind.com/
+servers:
+- url: https://api.segmind.com
+  description: Segmind model inference and account API
+- url: https://workflows-api.segmind.com
+  description: Segmind workflows/storage API
+security:
+- apiKeyAuth: []
+tags:
+- name: Account
+  description: User account and credits
+paths:
+  /v1/get-user-credits:
+    get:
+      tags:
+      - Account
+      summary: Retrieve current credit balance
+      operationId: getUserCredits
+      responses:
+        '200':
+          description: Credits payload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  credits:
+                    type: number
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key

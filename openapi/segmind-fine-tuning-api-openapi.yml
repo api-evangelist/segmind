@@ -1,0 +1,112 @@
+openapi: 3.1.0
+info:
+  title: Segmind Account Fine-tuning API
+  description: Segmind provides API access to top AI models for rapid prototyping and deployment, including synchronous and asynchronous model inference, fine-tuning, and asset upload. Authenticated with an API key header.
+  version: '1'
+  contact:
+    name: Segmind
+    url: https://www.segmind.com/
+servers:
+- url: https://api.segmind.com
+  description: Segmind model inference and account API
+- url: https://workflows-api.segmind.com
+  description: Segmind workflows/storage API
+security:
+- apiKeyAuth: []
+tags:
+- name: Fine-tuning
+  description: Fine-tuning request management and data handling
+paths:
+  /finetune/request/submit:
+    post:
+      tags:
+      - Fine-tuning
+      summary: Initiate a fine-tuning job
+      operationId: submitFinetune
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: Fine-tune request accepted
+  /finetune/request/details:
+    get:
+      tags:
+      - Fine-tuning
+      summary: Get details for a fine-tune request
+      operationId: getFinetuneDetails
+      parameters:
+      - in: query
+        name: request_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Fine-tune details
+  /finetune/request/list:
+    get:
+      tags:
+      - Fine-tuning
+      summary: List fine-tuning requests
+      operationId: listFinetuneRequests
+      responses:
+        '200':
+          description: Array of fine-tune requests
+  /finetune/request/access-update:
+    put:
+      tags:
+      - Fine-tuning
+      summary: Update fine-tuned model access (public/private)
+      operationId: updateFinetuneAccess
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                request_id:
+                  type: string
+                access:
+                  type: string
+                  enum:
+                  - public
+                  - private
+      responses:
+        '200':
+          description: Updated
+  /finetune/request/upload/pre-signed-url:
+    get:
+      tags:
+      - Fine-tuning
+      summary: Obtain a pre-signed upload URL for fine-tune data
+      operationId: getFinetuneUploadUrl
+      responses:
+        '200':
+          description: Pre-signed URL response
+  /finetune/request/file/download:
+    get:
+      tags:
+      - Fine-tuning
+      summary: Download trained model weights
+      operationId: downloadFinetuneFile
+      parameters:
+      - in: query
+        name: request_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: File download URL or stream
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key

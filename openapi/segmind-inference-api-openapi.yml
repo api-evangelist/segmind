@@ -1,0 +1,122 @@
+openapi: 3.1.0
+info:
+  title: Segmind Account Inference API
+  description: Segmind provides API access to top AI models for rapid prototyping and deployment, including synchronous and asynchronous model inference, fine-tuning, and asset upload. Authenticated with an API key header.
+  version: '1'
+  contact:
+    name: Segmind
+    url: https://www.segmind.com/
+servers:
+- url: https://api.segmind.com
+  description: Segmind model inference and account API
+- url: https://workflows-api.segmind.com
+  description: Segmind workflows/storage API
+security:
+- apiKeyAuth: []
+tags:
+- name: Inference
+  description: Synchronous and asynchronous model inference
+paths:
+  /v1/{model_name}:
+    post:
+      tags:
+      - Inference
+      summary: Synchronous model inference
+      description: Submit a request to a model and wait for the response. Suitable for models that complete within roughly 60 seconds.
+      operationId: invokeModelSync
+      parameters:
+      - in: path
+        name: model_name
+        required: true
+        schema:
+          type: string
+        description: Model identifier, e.g. fast-flux-schnell
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              properties:
+                prompt:
+                  type: string
+      responses:
+        '200':
+          description: Model inference response
+  /v2/{model_name}:
+    post:
+      tags:
+      - Inference
+      summary: Asynchronous model inference
+      description: Submit an async request; returns a request_id.
+      operationId: invokeModelAsync
+      parameters:
+      - in: path
+        name: model_name
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+              properties:
+                prompt:
+                  type: string
+      responses:
+        '200':
+          description: Async request accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request_id:
+                    type: string
+  /v2/requests/{request_id}/status:
+    get:
+      tags:
+      - Inference
+      summary: Get lightweight request status
+      operationId: getRequestStatus
+      parameters:
+      - in: path
+        name: request_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Status payload
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+  /v2/requests/{request_id}:
+    get:
+      tags:
+      - Inference
+      summary: Get full async result
+      operationId: getRequestResult
+      parameters:
+      - in: path
+        name: request_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Full async result
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key

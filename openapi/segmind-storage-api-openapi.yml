@@ -1,0 +1,46 @@
+openapi: 3.1.0
+info:
+  title: Segmind Account Storage API
+  description: Segmind provides API access to top AI models for rapid prototyping and deployment, including synchronous and asynchronous model inference, fine-tuning, and asset upload. Authenticated with an API key header.
+  version: '1'
+  contact:
+    name: Segmind
+    url: https://www.segmind.com/
+servers:
+- url: https://api.segmind.com
+  description: Segmind model inference and account API
+- url: https://workflows-api.segmind.com
+  description: Segmind workflows/storage API
+security:
+- apiKeyAuth: []
+tags:
+- name: Storage
+  description: Upload reusable assets
+paths:
+  /upload-asset:
+    post:
+      tags:
+      - Storage
+      summary: Upload a file as a reusable asset (workflows-api host)
+      operationId: uploadAsset
+      servers:
+      - url: https://workflows-api.segmind.com
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Asset upload response
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
