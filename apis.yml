@@ -4,9 +4,22 @@ description: >-
   We put the AI in API, delivering top AI models for rapid prototyping and seamless
   deployment, ready to scale up as needed.
 type: Index
+accessModel:
+  pricing: freemium
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Freemium · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 position: Consumer
 access: 3rd-Party
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/segmind.png
 tags: []
 created: '2025-03-01'
 modified: '2026-03-16'
@@ -29,16 +42,52 @@ common:
   - type: Blog
     url: https://blog.segmind.com/feed
 apis:
-  - aid: segmind:segmind
-    name: Segmind
-    description: >-
-      We put the AI in API, delivering top AI models for rapid prototyping and seamless
-      deployment, ready to scale up as needed.
-    humanURL: ' https://www.segmind.com/'
-    tags: []
-    properties:
-      - type: Documentation
-        url: ' https://www.segmind.com/'
+- aid: segmind:segmind
+  name: Segmind
+  description: >-
+    We put the AI in API, delivering top AI models for rapid prototyping and seamless deployment, ready
+    to scale up as needed.
+  humanURL: ' https://www.segmind.com/'
+  tags: []
+  properties:
+  - type: Documentation
+    url: ' https://www.segmind.com/'
+- aid: segmind:segmind-account-api
+  name: Segmind Account API
+  description: User account and credits
+  humanURL: ' https://www.segmind.com/'
+  tags:
+  - Account
+  properties:
+  - type: OpenAPI
+    url: openapi/segmind-account-api-openapi.yml
+- aid: segmind:segmind-fine-tuning-api
+  name: Segmind Fine-tuning API
+  description: Fine-tuning request management and data handling
+  humanURL: ' https://www.segmind.com/'
+  tags:
+  - Fine-tuning
+  properties:
+  - type: OpenAPI
+    url: openapi/segmind-fine-tuning-api-openapi.yml
+- aid: segmind:segmind-inference-api
+  name: Segmind Inference API
+  description: Synchronous and asynchronous model inference
+  humanURL: ' https://www.segmind.com/'
+  tags:
+  - Inference
+  properties:
+  - type: OpenAPI
+    url: openapi/segmind-inference-api-openapi.yml
+- aid: segmind:segmind-storage-api
+  name: Segmind Storage API
+  description: Upload reusable assets
+  humanURL: ' https://www.segmind.com/'
+  tags:
+  - Storage
+  properties:
+  - type: OpenAPI
+    url: openapi/segmind-storage-api-openapi.yml
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
