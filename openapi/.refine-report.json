@@ -1,0 +1,20 @@
+{
+  "provider": "segmind",
+  "sources": [
+    "segmind-account-api-openapi.yml",
+    "segmind-fine-tuning-api-openapi.yml",
+    "segmind-inference-api-openapi.yml",
+    "segmind-storage-api-openapi.yml"
+  ],
+  "outputs": [
+    "segmind-account-api-openapi.yml",
+    "segmind-fine-tuning-api-openapi.yml",
+    "segmind-inference-api-openapi.yml",
+    "segmind-storage-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
