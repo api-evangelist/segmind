@@ -5,7 +5,7 @@
       "source": "https://blog.segmind.com/feed",
       "feed_url": "https://blog.segmind.com/feed",
       "title": "",
-      "saved": 0,
+      "saved": 8,
       "method": "feed"
     },
     {
@@ -13,9 +13,10 @@
       "feed_url": "https://www.segmind.com/llms.txt",
       "title": "",
       "saved": 0,
-      "method": "none"
+      "method": "none",
+      "error": "parse_failed"
     }
   ],
-  "fetched": "2026-08-06T14:08:46Z",
-  "post_count": 27
+  "fetched": "2026-08-15T12:11:08Z",
+  "post_count": 35
 }
