@@ -1,0 +1,149 @@
+{
+  "item": [
+    {
+      "id": "edac1996-81ea-4447-a2f9-3e6be3bf2158",
+      "name": "Storage",
+      "description": {
+        "content": "Upload reusable assets",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "70c9e826-c84e-4244-8062-dd32e6c788d5",
+          "name": "Upload a file as a reusable asset (workflows-api host)",
+          "request": {
+            "name": "Upload a file as a reusable asset (workflows-api host)",
+            "description": {},
+            "url": {
+              "protocol": "https",
+              "path": [
+                "upload-asset"
+              ],
+              "host": [
+                "workflows-api",
+                "segmind",
+                "com"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1e9d0d17-df92-4067-8495-e90d0d2598b3",
+              "name": "Asset upload response",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "upload-asset"
+                  ],
+                  "host": [
+                    "workflows-api",
+                    "segmind",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "file",
+                      "value": "<binary>",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.segmind.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "90dc205e-2ba8-4588-8359-3efc007c2d80",
+    "name": "Segmind Account Storage API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Segmind provides API access to top AI models for rapid prototyping and deployment, including synchronous and asynchronous model inference, fine-tuning, and asset upload. Authenticated with an API key header.\n\nContact Support:\n Name: Segmind",
+      "type": "text/plain"
+    }
+  }
+}

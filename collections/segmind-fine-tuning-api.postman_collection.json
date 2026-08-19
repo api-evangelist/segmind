@@ -1,0 +1,537 @@
+{
+  "item": [
+    {
+      "id": "565849b8-242c-44bc-9262-490e506c051f",
+      "name": "Fine-tuning",
+      "description": {
+        "content": "Fine-tuning request management and data handling",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b3789495-9a5a-4776-86a7-b7a5f86df349",
+          "name": "Initiate a fine-tuning job",
+          "request": {
+            "name": "Initiate a fine-tuning job",
+            "description": {},
+            "url": {
+              "path": [
+                "finetune",
+                "request",
+                "submit"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"key_0\": \"string\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "7fd46b77-9059-492b-ab6b-9a00a7b84477",
+              "name": "Fine-tune request accepted",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "finetune",
+                    "request",
+                    "submit"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"key_0\": 8261,\n  \"key_1\": 6894.633734032855\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a72cac95-5b30-4562-9541-72de28dba1fb",
+          "name": "Get details for a fine-tune request",
+          "request": {
+            "name": "Get details for a fine-tune request",
+            "description": {},
+            "url": {
+              "path": [
+                "finetune",
+                "request",
+                "details"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "request_id",
+                  "value": "<string>",
+                  "description": "(Required) "
+                }
+              ],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "48f871d3-ecc5-4ed9-953f-790300bc17f0",
+              "name": "Fine-tune details",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "finetune",
+                    "request",
+                    "details"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "request_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "80542ab3-7082-4a81-a9ee-3ed7abfc492c",
+          "name": "List fine-tuning requests",
+          "request": {
+            "name": "List fine-tuning requests",
+            "description": {},
+            "url": {
+              "path": [
+                "finetune",
+                "request",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "731443ed-1308-4f64-8052-b938fe8ddca1",
+              "name": "Array of fine-tune requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "finetune",
+                    "request",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "719c98d9-dd81-4ff3-83bf-c566da829c2d",
+          "name": "Update fine-tuned model access (public/private)",
+          "request": {
+            "name": "Update fine-tuned model access (public/private)",
+            "description": {},
+            "url": {
+              "path": [
+                "finetune",
+                "request",
+                "access-update"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"request_id\": \"<string>\",\n  \"access\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "a8da400f-45b7-4179-8d9e-06b9da001d33",
+              "name": "Updated",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "finetune",
+                    "request",
+                    "access-update"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"request_id\": \"<string>\",\n  \"access\": \"<string>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "85b35f36-139b-4b9f-bf89-2e5e7cf42914",
+          "name": "Obtain a pre-signed upload URL for fine-tune data",
+          "request": {
+            "name": "Obtain a pre-signed upload URL for fine-tune data",
+            "description": {},
+            "url": {
+              "path": [
+                "finetune",
+                "request",
+                "upload",
+                "pre-signed-url"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "8d28c35f-381c-4f3d-9921-efd3f9b11a41",
+              "name": "Pre-signed URL response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "finetune",
+                    "request",
+                    "upload",
+                    "pre-signed-url"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0f9d174f-0836-4b2c-bfcb-5b0c6dd5de35",
+          "name": "Download trained model weights",
+          "request": {
+            "name": "Download trained model weights",
+            "description": {},
+            "url": {
+              "path": [
+                "finetune",
+                "request",
+                "file",
+                "download"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "request_id",
+                  "value": "<string>",
+                  "description": "(Required) "
+                }
+              ],
+              "variable": []
+            },
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "f337e5ac-35e4-4be3-b098-9870ed50755d",
+              "name": "File download URL or stream",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "finetune",
+                    "request",
+                    "file",
+                    "download"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "request_id",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.segmind.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "763ff4de-e71f-435a-8d02-7022f4b1d5c9",
+    "name": "Segmind Account Fine-tuning API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Segmind provides API access to top AI models for rapid prototyping and deployment, including synchronous and asynchronous model inference, fine-tuning, and asset upload. Authenticated with an API key header.\n\nContact Support:\n Name: Segmind",
+      "type": "text/plain"
+    }
+  }
+}

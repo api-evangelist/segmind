@@ -1,0 +1,126 @@
+{
+  "item": [
+    {
+      "id": "1655eeb0-d90a-4313-af7a-25c67d12109d",
+      "name": "Account",
+      "description": {
+        "content": "User account and credits",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "b161b2c3-38a2-4e1c-a681-d6f0299dccd7",
+          "name": "Retrieve current credit balance",
+          "request": {
+            "name": "Retrieve current credit balance",
+            "description": {},
+            "url": {
+              "path": [
+                "v1",
+                "get-user-credits"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "0efb7e4d-f463-4f11-9f74-2ef42f45a7c4",
+              "name": "Credits payload",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "v1",
+                    "get-user-credits"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: apikey",
+                      "type": "text/plain"
+                    },
+                    "key": "x-api-key",
+                    "value": "<API Key>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"credits\": 4210.196269883459\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://api.segmind.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}"
+      },
+      {
+        "key": "in",
+        "value": "header"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "3b90fdd3-1fd1-498e-83f7-3c3fb5342f9d",
+    "name": "Segmind Account API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Segmind provides API access to top AI models for rapid prototyping and deployment, including synchronous and asynchronous model inference, fine-tuning, and asset upload. Authenticated with an API key header.\n\nContact Support:\n Name: Segmind",
+      "type": "text/plain"
+    }
+  }
+}
