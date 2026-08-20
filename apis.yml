@@ -66,6 +66,8 @@ apis:
   description: Fine-tuning request management and data handling
   humanURL: ' https://www.segmind.com/'
   tags:
+  - Fine-Tuning
+  tags_raw:
   - Fine-tuning
   properties:
   - type: OpenAPI
