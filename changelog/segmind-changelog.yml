@@ -1,0 +1,146 @@
+generated: '2026-08-27'
+method: searched
+source: https://docs.segmind.com/docs/platform/release-notes
+scheme: dated-weekly
+title: Segmind Release Notes
+url: https://docs.segmind.com/docs/platform/release-notes
+cadence: weekly
+current_version: 'weekly release notes, latest 2026-08-23'
+format: >-
+  Each weekly note is its own dated page under /docs/platform/release-notes/<YYYY-MM-DD>-weekly,
+  broken into numbered items with What's new / Impact / Released fields. Items carry their own
+  release date, which can precede the week's end date.
+note: >-
+  Segmind runs a genuine weekly, dated changelog covering models, API behaviour, SDK,
+  console and PixelFlow in one stream. There is no RSS/Atom feed and no machine-readable
+  changelog document; the full set of entries is however reachable in markdown via
+  https://docs.segmind.com/llms-full.txt. Entries below are the recent window; older
+  website/console notes from April 2025 also exist on the same index.
+entries:
+  - version: '2026-08-23'
+    date: '2026-08-23'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-08-23-weekly
+    breaking: false
+    highlights:
+      - Google Lyria 3 music generation with timed lyrics
+      - Seedance 2.5 at 1080p; audio on by default and more forgiving Seedance inputs
+      - Clearer 401 and async errors
+      - Cost Analytics member filter; restored team model access controls
+      - A batch of PixelFlow reliability fixes
+  - version: '2026-08-16'
+    date: '2026-08-16'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-08-16-weekly
+    breaking: false
+    highlights:
+      - Object extraction and layer decomposition models; LTX 2.5; Grok Imagine Image 2
+      - Annotatable playground with shot chaining
+      - Clearer API errors and x-api-key code samples
+      - Per-team-member usage visibility; PixelFlow partner publishing
+  - version: '2026-08-09'
+    date: '2026-08-09'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-08-09-weekly
+    breaking: false
+    highlights:
+      - Sonilo audio models; FLUX 3 video family with draft enhance
+      - Seedance 2.5 and new video controls
+      - Magic-link sign-in for everyone; Bundles; a more persistent playground
+  - version: '2026-08-02'
+    date: '2026-08-02'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-08-02-weekly
+    breaking: false
+    highlights:
+      - Two new image models; full multi-image responses
+      - Portrait reference-to-video; resizable playground; clearer team model access
+  - version: '2026-07-26'
+    date: '2026-07-26'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-07-26-weekly
+    breaking: false
+    highlights:
+      - Opt-in web search grounding for Gemini models, with source citations
+      - Redesigned model playground
+  - version: '2026-07-19'
+    date: '2026-07-19'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-07-19-weekly
+    breaking: false
+    highlights:
+      - glm-5.2, nemotron-3-ultra and minimax-m3 chat models
+      - veed-2-lipsync and a multi-clip gallery
+  - version: '2026-07-12'
+    date: '2026-07-12'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-07-12-weekly
+    breaking: false
+    highlights:
+      - Seedream 5.0 Pro; new VEED video models; HeyGen avatar looks
+      - Auto-clipping for long-form video
+  - version: '2026-07-05'
+    date: '2026-07-05'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-07-05-weekly
+    breaking: false
+    highlights:
+      - gemini-omni-flash text and image-to-video; nano-banana-2-lite
+      - Full p-image-upscale controls
+  - version: '2026-06-28'
+    date: '2026-06-28'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-06-28-weekly
+    breaking: false
+    highlights:
+      - HappyHorse 1.1 video; cheaper Seedance 2.0 Mini; p-image-try-on
+  - version: '2026-06-21'
+    date: '2026-06-21'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-06-21-weekly
+    breaking: false
+    additions:
+      - >-
+        OAuth 2.1 authorization server, endpoints under /oauth/. Third-party applications,
+        "including MCP clients", can request scoped, user-authorized access and call the
+        API without handling an API key. Described as fully additive — existing API keys
+        and sessions keep working. Released 2026-06-16.
+      - >-
+        Grok Imagine consolidated into a single grok-imagine-image model, with quality and
+        image-editing selectable by request parameter instead of separate model variants.
+      - >-
+        The {"prompt": "..."} shorthand extended across more LLMs; Claude models reliably
+        accept image and PDF URL inputs.
+      - Model-page API samples reorganised as Mode (Sync/Async) x Language, defaulting to async.
+      - PixelFlow single-node runs; 3D gaussian-splat rendering in the playground.
+    note: >-
+      The most significant API-surface change in the window. Segmind now runs an OAuth 2.1
+      server aimed explicitly at MCP clients, but publishes no RFC 8414 or RFC 9728
+      discovery metadata for it and no scope reference — see
+      well-known/segmind-well-known.yml and scopes/segmind-scopes.yml.
+  - version: '2026-06-14'
+    date: '2026-06-14'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-06-14-weekly
+    breaking: false
+    additions:
+      - Grok Imagine text-to-image; Bria Video Background Removal 3.0
+      - More reliable async inference
+      - >-
+        API errors returned as structured JSON — unknown model slugs return 404 and
+        unexpected failures return a clean 500 instead of raw gateway errors. Calls to
+        retired or deprecated models now fail fast with 410 Gone and are not charged.
+  - version: '2026-06-07'
+    date: '2026-06-07'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-06-07-weekly
+    breaking: false
+    highlights:
+      - Ideogram 4; MAI Image 2.5; TripoSPLAT image-to-3D
+      - Dynamic fan-out in the PixelFlow editor
+  - version: '2026-05-31'
+    date: '2026-05-31'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-05-31-weekly
+    breaking: false
+    highlights:
+      - PDF, audio and video inputs for Claude and other LLMs
+      - Editable JSON playground; 2 GB upload limit
+  - version: '2026-05-24'
+    date: '2026-05-24'
+    url: https://docs.segmind.com/docs/platform/release-notes/2026-05-24-weekly
+    breaking: false
+    highlights:
+      - Observability dashboard for API health and cost
+      - Team usage summary API; auto-recharge changes
+related_deprecations: lifecycle/segmind-lifecycle.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

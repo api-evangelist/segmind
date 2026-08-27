@@ -1,0 +1,146 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://docs.segmind.com/docs/get-started/authentication,
+  https://docs.segmind.com/docs/serverless-api,
+  https://docs.segmind.com/docs/serverless-api/async-inference,
+  https://www.segmind.com/pricing,
+  https://docs.segmind.com/docs/serverless-api/logging,
+  openapi/ in this repo
+summary: >-
+  Segmind's gateway is a bespoke job API. It conforms to no cross-cutting HTTP API
+  standard beyond plain REST-over-JSON, and its market — hosted generative-model inference
+  — has no ratified domain standard to conform to, so the domain slot is genuinely empty
+  rather than unmet.
+conformance:
+  - id: oauth2
+    conforms: partial
+    evidence: >-
+      OAuth 2.0 authorization-code social login through Google, Microsoft and Discord is
+      documented, with a standard token response ({access_token, refresh_token,
+      expires_in}). Segmind additionally announced its own OAuth 2.1 authorization server
+      on 2026-06-16 with endpoints under /oauth/. Marked partial because neither surface
+      publishes RFC 8414 authorization-server metadata, a scope reference, or a
+      registration flow — probed 2026-08-27, all /.well-known/oauth-* paths 404.
+    source: https://docs.segmind.com/docs/get-started/authentication
+  - id: oidc
+    conforms: false
+    evidence: >-
+      No /.well-known/openid-configuration on any host (www, platform, api, docs — all
+      404), no JWKS endpoint, no id_token. JWTs are issued but as a proprietary session
+      token with claims jti/exp/iat/nbf/identity.
+  - id: rfc9457
+    conforms: false
+    evidence: >-
+      Errors are {"error": "<message>"} with content-type application/json, not
+      application/problem+json. No type/title/detail/instance members. 405 returns HTML.
+  - id: rfc9116
+    conforms: false
+    evidence: >-
+      No /.well-known/security.txt on www.segmind.com, api.segmind.com,
+      workflows-api.segmind.com, docs.segmind.com or platform.segmind.com — all probed
+      2026-08-27.
+  - id: rfc8594
+    conforms: false
+    evidence: >-
+      No Sunset or Deprecation response headers are documented. Deprecation is announced in
+      prose; retired models fail with 410 Gone at call time.
+  - id: idempotency
+    conforms: false
+    evidence: >-
+      Explicitly not supported. "Each POST /v2/{slug} creates a NEW request_id ... Never
+      retry by re-POSTing after a successful submit — that starts a second billable job."
+      No Idempotency-Key header, no client token, no dedupe window.
+    source: https://docs.segmind.com/docs/serverless-api/async-inference#idempotency
+  - id: pagination
+    conforms: false
+    evidence: >-
+      No paginated collection is documented anywhere on the gateway. The API is
+      job-shaped, not collection-shaped.
+  - id: 'json:api'
+    conforms: false
+    evidence: Plain JSON objects; no JSON:API document structure, media type or links members.
+  - id: odata
+    conforms: false
+    evidence: No $metadata surface and no OData query options.
+  - id: scim
+    conforms: false
+    evidence: >-
+      Teams and members are managed in the console only. No SCIM schema URN
+      (urn:ietf:params:scim:schemas:*) and no /scim/v2 surface appears in the docs.
+  - id: webhooks
+    conforms: partial
+    evidence: >-
+      Two live PixelFlow event types (NODE_RUN, GRAPH_RUN) are published, but with no
+      payload schema, no signing secret, no retry policy and no AsyncAPI document. There
+      is no webhook at all for plain gateway inference. See asyncapi/segmind-webhooks.yml.
+  - id: openapi
+    conforms: partial
+    evidence: >-
+      Segmind publishes no OpenAPI document of its own. Probed 2026-08-27:
+      api.segmind.com/openapi.json, /openapi.yaml, /swagger.json, /api-docs, /docs and
+      /redoc all return the gateway's 400 default; workflows-api.segmind.com/openapi.json
+      returns 404; docs.segmind.com/openapi.json and www.segmind.com/openapi.json return
+      404 HTML shells. The specs under openapi/ in this repo were authored by API
+      Evangelist from the published documentation, not harvested from the provider.
+  - id: mcp
+    conforms: false
+    evidence: >-
+      No MCP server. Segmind's OAuth 2.1 announcement names MCP clients as a target, but
+      no endpoint, package or tools/list surface exists. See mcp/segmind-mcp.yml.
+  - id: a2a
+    conforms: false
+    evidence: >-
+      No agent card. /.well-known/agent-card.json and /.well-known/agent.json probed on
+      www, api, workflows-api, docs, platform, cloud and api.spotprod — all 404, 400 or a
+      307 to a login.
+  - id: llmstxt
+    conforms: true
+    evidence: >-
+      Two distinct llms.txt documents are served, both HTTP 200 and both real markdown:
+      https://www.segmind.com/llms.txt (136,909 bytes — the full model directory with
+      per-model slug, modality, average cost and average latency, plus a per-model
+      llms.txt convention at /models/{slug}/llms.txt) and
+      https://docs.segmind.com/llms.txt (16,214 bytes — the documentation index), with
+      https://docs.segmind.com/llms-full.txt (364,903 bytes) alongside it. This is the
+      strongest agent-facing surface Segmind ships.
+domain_standard:
+  applicable: false
+  market: Hosted generative-model inference (image, video, audio, LLM)
+  evidence: >-
+    No ratified domain standard governs this market. The nearest de facto convention is an
+    OpenAI-compatible /v1/chat/completions surface for LLM providers; Segmind does not
+    declare one — its LLM models are called through the same POST /v1/{model} and
+    POST /v2/{model} routes as its image and video models, with a documented
+    {"prompt": "..."} shorthand rather than an OpenAI-shaped messages envelope. Recorded
+    as not-applicable, not as a failure.
+compliance:
+  published: true
+  certifications:
+    - name: SOC 2
+      status: claimed
+      scope: Enterprise plan
+      evidence: >-
+        "SOC 2 compliance" is listed as a bullet on the Enterprise plan card of
+        https://www.segmind.com/pricing.
+      report_available: not stated
+      trust_center: none
+      note: >-
+        A single-line marketing claim on a pricing card. There is no trust centre, no
+        subprocessor list, no report request flow, and no attestation date or auditor
+        named. trust.segmind.com does not resolve. Recorded as claimed, not verified.
+  privacy:
+    - name: Data handling
+      evidence: >-
+        The logging page states that input images, videos and audio are NOT stored, that
+        prompts and configuration parameters ARE stored for caching, and that outputs are
+        deleted after 7 days.
+      source: https://docs.segmind.com/docs/serverless-api/logging
+  gaps:
+    - No trust centre or security page (www.segmind.com/security returns 404).
+    - No ISO 27001, PCI, HIPAA, GDPR or FedRAMP claim published.
+    - No vulnerability-disclosure policy, security.txt or bug-bounty programme found.
+    - No DPA or subprocessor list linked from the public site.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

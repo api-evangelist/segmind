@@ -1,0 +1,171 @@
+generated: '2026-08-27'
+method: derived
+source: >-
+  openapi/segmind-inference-api-openapi.yml, openapi/segmind-account-api-openapi.yml,
+  openapi/segmind-storage-api-openapi.yml, openapi/segmind-fine-tuning-api-openapi.yml,
+  enriched from https://docs.segmind.com/docs/serverless-api/async-inference and
+  https://docs.segmind.com/docs/platform/account-and-billing-apis
+summary: >-
+  Derived entity graph for the Segmind AI Gateway. The captured OpenAPI declares almost no
+  named schemas — request and response bodies are typed as free-form objects because every
+  model takes a different body — so the entities below are reconstructed from the
+  documented response shapes and the identifiers that link them. Field names are taken
+  verbatim from published examples; nothing is invented.
+id_conventions:
+  - entity: InferenceRequest
+    field: request_id
+    format: UUID v4
+    example_shape: 2c7f59ea-13f1-402c-9353-915a2b5a2124
+  - entity: Model
+    field: model_name
+    format: slug
+    example_shape: fast-flux-schnell, seedream-4.5, nano-banana-pro
+    note: >-
+      The model slug is the routing key — it is a path segment, not a body field. The
+      catalogue of slugs is published as https://www.segmind.com/llms.txt, not as an API
+      operation.
+  - entity: ApiKey
+    field: key
+    format: 'SG_ + 16 hex'
+  - entity: DedicatedEndpoint
+    field: endpoint_id
+    format: opaque string
+    example_shape: tpr9hugy367nbz
+  - entity: FinetuneRequest
+    field: request_id
+    format: opaque string
+entities:
+  - name: Model
+    description: >-
+      A hosted generative model. Addressed by slug in the request path; carries a price, a
+      GPU type and an expected generation speed on its own page. Not represented as a
+      resource in the API — there is no list-models operation on the gateway.
+    identified_by: model_name
+    operations: []
+  - name: InferenceRequest
+    description: >-
+      One submitted job. Created by invokeModelAsync or invokeModelSync; followed with
+      getRequestStatus and getRequestResult.
+    identified_by: request_id
+    fields:
+      - {name: request_id, type: string}
+      - {name: status, type: enum, values: [QUEUED, PROCESSING, COMPLETED, FAILED]}
+      - {name: poll_url, type: url}
+      - {name: status_url, type: url}
+      - {name: response_url, type: url}
+      - {name: error, type: string, note: present on FAILED}
+    operations: [invokeModelAsync, invokeModelSync, getRequestStatus, getRequestResult]
+    expiry: 'the request record expires before the output file; poll endpoints then 404'
+  - name: InferenceResult
+    description: The completed body fetched from response_url.
+    fields:
+      - {name: output, type: string, note: present for every modality — a URL or generated text}
+      - {name: images, type: array, of: MediaObject}
+      - {name: video, type: object, of: MediaObject}
+      - {name: seed, type: string}
+      - {name: prompt, type: string}
+      - {name: reasoning, type: string, note: LLM models}
+      - {name: partial, type: boolean, note: LLM models}
+      - {name: timings, type: object}
+      - {name: grounding, type: object, note: present on a web-search-grounded request}
+    operations: [getRequestResult]
+  - name: MediaObject
+    description: A generated file returned as a hosted URL.
+    fields:
+      - {name: url, type: url, host: images.segmind.com}
+      - {name: content_type, type: string}
+      - {name: file_name, type: string}
+      - {name: file_size, type: string}
+      - {name: last_frame_url, type: url, note: video outputs, where the model supports it}
+    retention: 7 days
+    access: 'public — no API key required; long and unguessable'
+  - name: Metrics
+    description: Per-request accounting, returned inline on every completed job.
+    fields:
+      - {name: cost, type: number, unit: credits}
+      - {name: remaining_credits, type: number, unit: credits}
+      - {name: inference_time, type: number, unit: seconds}
+      - {name: queue_time, type: number, unit: seconds}
+      - {name: total_time, type: number, unit: seconds}
+      - {name: retry_count, type: integer, note: present only when a retry occurred}
+    sync_equivalent_headers: [x-cost, x-remaining-credits, x-generation-time, x-seed-value, x-request-id]
+  - name: CreditBalance
+    description: The account's spendable balance.
+    fields:
+      - {name: credits, type: number}
+      - {name: free-credits, type: number}
+    operations: [getUserCredits]
+    note: Balances are per workspace, so switching teams changes which balance is read.
+  - name: Asset
+    description: A file uploaded to Segmind Storage, returned as a reusable URL for model input.
+    operations: [uploadAsset]
+    host: workflows-api.segmind.com
+    input_format: 'data:<mime-type>;base64,<content> in a data_urls array'
+    note: No delete or list operation is documented.
+  - name: Workflow
+    description: >-
+      A published PixelFlow workflow, callable as POST /workflows/v2/{slug} on the same
+      async contract as a model.
+    identified_by: slug
+    note: >-
+      Not in the captured OpenAPI. Its result differs from a model result: output is a
+      JSON-STRINGIFIED array of {keyname, value} pairs, one per named output node, which
+      must be parsed.
+    source: https://docs.segmind.com/docs/pixelflow/api-reference
+  - name: DedicatedEndpoint
+    description: A model deployed on reserved GPUs, managed on a separate control plane.
+    identified_by: endpoint_id
+    host: api.spotprod.segmind.com
+    fields:
+      - {name: endpoint_name, type: string}
+      - {name: model_name, type: string}
+      - {name: workers_min, type: integer}
+      - {name: workers_max, type: integer}
+      - {name: idle_timeout, type: integer, unit: seconds}
+      - {name: execution_timeout, type: integer, unit: seconds}
+      - {name: scaler_type, type: string, example: REQUEST_COUNT}
+      - {name: scaler_value, type: integer}
+      - {name: gpu_id, type: string, example: AMPERE_80}
+      - {name: force_update, type: boolean}
+    note: >-
+      Not in the captured OpenAPI. /endpoint/add, /endpoint/update and /endpoint/delete
+      are served by ONE resource that selects the operation from the HTTP method.
+    source: https://docs.segmind.com/docs/serverless-api/dedicated-endpoints/endpoint-apis
+  - name: FinetuneRequest
+    description: A fine-tuning job. DEPRECATED — the service accepts no new training jobs.
+    identified_by: request_id
+    operations: [submitFinetune, getFinetuneDetails, listFinetuneRequests, updateFinetuneAccess, getFinetuneUploadUrl, downloadFinetuneFile]
+    status: deprecated
+  - name: WebhookRegistration
+    description: A consumer URL registered to receive NODE_RUN / GRAPH_RUN callbacks.
+    identified_by: webhook_id
+    fields:
+      - {name: webhook_id, type: string}
+      - {name: webhook_url, type: url}
+      - {name: event_types, type: array}
+    managed_via: 'console (Developer -> Webhooks) or the Python SDK segmind.webhooks.*'
+    note: No REST endpoint for webhook registration is documented.
+relationships:
+  - {from: InferenceRequest, to: Model, type: belongs_to, via: model_name}
+  - {from: InferenceRequest, to: InferenceResult, type: has_one, via: request_id}
+  - {from: InferenceResult, to: MediaObject, type: has_many, via: 'images[] / video / audio'}
+  - {from: InferenceResult, to: Metrics, type: has_one, via: metrics}
+  - {from: InferenceRequest, to: CreditBalance, type: debits, via: 'metrics.cost / x-cost'}
+  - {from: Asset, to: InferenceRequest, type: input_to, via: 'the asset URL passed as a model parameter'}
+  - {from: Workflow, to: InferenceRequest, type: produces, via: 'POST /workflows/v2/{slug} returns a request_id on the same async contract'}
+  - {from: Workflow, to: Model, type: has_many, via: 'model nodes on the canvas'}
+  - {from: DedicatedEndpoint, to: Model, type: hosts, via: model_name}
+  - {from: WebhookRegistration, to: Workflow, type: observes, via: 'NODE_RUN / GRAPH_RUN events'}
+  - {from: FinetuneRequest, to: Model, type: produces, via: 'a fine-tuned model, still callable for inference'}
+gaps:
+  - >-
+    The captured OpenAPI declares no components.schemas at all. Every request and response
+    body is typed as a free-form object, because each model defines its own parameter set
+    and Segmind publishes those per model page rather than in a contract.
+  - >-
+    Two production entities — Workflow and DedicatedEndpoint — have documented REST
+    surfaces on hosts that appear in no OpenAPI and, for api.spotprod.segmind.com, in no
+    apis.yml entry either.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -15,6 +15,12 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
+  "notes": [
+    "segmind-account-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "segmind-fine-tuning-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "segmind-inference-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "segmind-storage-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
   "skipped": []
 }

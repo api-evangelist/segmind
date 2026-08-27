@@ -1,0 +1,166 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://docs.segmind.com/docs/serverless-api#api-error-codes,
+  https://docs.segmind.com/docs/serverless-api/async-inference#error-handling,
+  https://docs.segmind.com/docs/get-started/authentication#error-responses,
+  https://docs.segmind.com/docs/platform/account-and-billing-apis#responses,
+  https://docs.segmind.com/docs/platform/release-notes/2026-06-14-weekly
+format: proprietary
+rfc9457: false
+envelope:
+  shape: '{"error": "<message>"}'
+  content_type: application/json
+  auth_variant: '{"error": "<code>", "error_description": "<message>", "status_code": <int>}'
+  exceptions:
+    - '405 returns an HTML error page rather than JSON — the one non-JSON error on the gateway.'
+summary: >-
+  Segmind publishes a complete status-code table for the AI Gateway with a billed/not-billed
+  column, which is rarer than it should be and is the field an autonomous agent needs. What
+  it does not publish is a stable machine-readable error code: failures are identified by
+  HTTP status plus a human-readable `error` string, with no enumerated symbolic code on the
+  gateway. Only the authentication surface uses symbolic codes.
+error_count: 15
+errors:
+  - status: 200
+    name: OK
+    meaning: Request completed successfully and output was produced.
+    billed: true
+  - status: 400
+    name: Bad Request
+    meaning: >-
+      Malformed body, a missing required field, or an operation the model does not
+      support.
+    billed: false
+    remediation: Fix the request body against the model's parameter table on its API tab.
+  - status: 401
+    name: Unauthorized
+    meaning: Authentication failed.
+    billed: false
+    variants:
+      - body: '{"error": "Missing Authorization or x-api-key in header"}'
+        cause: >-
+          No key arrived at all — commonly a client that drops unknown headers on a
+          redirect. Regenerating the key will not help.
+      - body: '{"error": "Unauthorized. API key is invalid or may have expired..."}'
+        cause: The key itself was rejected. This is the one worth regenerating a key over.
+    note: >-
+      The invalid-key message ends by naming an older console URL; the current page is
+      Developer → API Keys at platform.segmind.com/api-keys.
+    remediation: Send the key in x-api-key. The gateway does not accept it as a bearer token.
+  - status: 403
+    name: Forbidden
+    meaning: >-
+      The model exists but the account or team is not permitted to call it — a permission
+      decision, not a bad request.
+    billed: false
+    remediation: >-
+      Retrying will not help. Check team model restrictions, or the model is private to
+      another account.
+  - status: 404
+    name: Not Found
+    meaning: No such model endpoint, or no such request id.
+    billed: false
+    variants:
+      - body: '{"error": "Request 00000000-... not found"}'
+        cause: >-
+          The request record expired. Records are short-lived and expire before the output
+          file does.
+      - body: '{"error": "No credits found for the user"}'
+        cause: >-
+          On /v1/get-user-credits — authenticated, but no balance record exists for the
+          account.
+    note: >-
+      Unknown model slugs returning a structured 404 (rather than a raw gateway error) was
+      shipped in the June 8–14 2026 release.
+  - status: 405
+    name: Method Not Allowed
+    meaning: Wrong HTTP verb — the model routes take POST.
+    billed: false
+    note: Returns HTML, not JSON.
+  - status: 406
+    name: Not Acceptable
+    meaning: >-
+      Most often a missing or wrong Content-Type. Also covers insufficient credits, a
+      parameter value rejected before the model runs, and a team spend limit being reached.
+    billed: false
+    variants:
+      - body: 'Invalid content type'
+        cause: >-
+          Content-Type absent or not application/json / multipart/form-data. Some HTTP
+          clients omit the header when the body is passed as a plain string, which makes
+          this easy to hit by accident and easy to misdiagnose as a billing problem.
+      - body: 'Insufficient credits'
+        cause: >-
+          Balance below the cost of the model being called — not only at zero. The message
+          names both the balance and what the call needed.
+      - body: team spend limit message
+        cause: A member hit a team spend limit; the message names the period and the cap.
+    remediation: >-
+      Set Content-Type: application/json first. Only then read it as a credits or limits
+      problem.
+  - status: 410
+    name: Gone
+    meaning: The model has been retired or deprecated. Fails fast.
+    billed: false
+    source: https://docs.segmind.com/docs/platform/release-notes/2026-06-14-weekly
+  - status: 422
+    name: Unprocessable
+    meaning: >-
+      v2 only — the inference itself ran and failed. NOT a malformed request body. The
+      response carries status FAILED and an error describing what went wrong.
+    billed: false
+    example_body: '{"status": "FAILED", "error": "Prompt is Mandatory and must be string", "metrics": {"inference_time": 0.007, "queue_time": 0.23, "total_time": 0.24}}'
+    note: >-
+      Billing fields (cost, remaining_credits) are omitted on a failure because nothing was
+      charged. Timing metrics may still be present.
+  - status: 429
+    name: Too Many Requests
+    meaning: Rate limit exceeded.
+    billed: false
+    symbolic: rate_limit_exceeded
+    remediation: >-
+      Back off. x-rate-limit-reset-at-utc says when the window resets; no Retry-After is
+      returned.
+  - status: 500
+    name: Server Error
+    meaning: An internal server error occurred during processing.
+    billed: false
+    note: >-
+      Read a 500 on a request you have only just changed as a PARAMETER problem before
+      assuming the platform is broken. Values are validated up front only where the model
+      declares a fixed set; anything else reaches the model and fails during generation,
+      which surfaces as 500.
+auth_errors:
+  - status: 401
+    code: invalid_token
+    description: Token is invalid or expired.
+  - status: 401
+    code: invalid_api_key
+    description: API key is invalid.
+  - status: 403
+    code: insufficient_scope
+    description: Token lacks required permissions.
+  - status: 429
+    code: rate_limit_exceeded
+    description: Too many requests.
+async_job_failure:
+  transport_status: 422
+  status_values: [QUEUED, PROCESSING, COMPLETED, FAILED]
+  note: >-
+    On the media-editing endpoints, submitting ALWAYS returns 200 with a request_id even if
+    the body is invalid — input is validated when the job runs, so a malformed request
+    surfaces as status FAILED on the status endpoint, not as an error on the POST.
+gaps:
+  - >-
+    No RFC 9457 problem+json. Errors are ad-hoc JSON with a single human-readable string.
+  - >-
+    No stable symbolic error code on the gateway itself — a client must branch on HTTP
+    status plus substring-match the message to tell "Invalid content type" from
+    "Insufficient credits", both of which are 406.
+  - >-
+    405 breaks the envelope by returning HTML, so a client cannot assume every error parses
+    as JSON.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

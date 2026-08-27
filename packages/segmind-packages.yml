@@ -1,0 +1,73 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://pypi.org/pypi/segmind/json, https://registry.npmjs.org/segmind-npm,
+  https://api.github.com/orgs/segmind/repos, https://docs.segmind.com/docs/sdks
+note: >-
+  Segmind ships one current first-party client library: the Python SDK, published to
+  PyPI as `segmind` and developed at github.com/segmind/segmind-python. The docs SDK
+  index lists JavaScript/TypeScript as "Coming soon" and tells readers to call the HTTP
+  API directly in the meantime; the only JS package the org ever published, `segmind-npm`,
+  last shipped in October 2023 and is not referenced from the current docs. An earlier
+  Python client (github.com/segmind/segmind-py) now carries a deprecation notice in its
+  README pointing at segmind-python.
+packages:
+  - language: python
+    registry: pypi
+    name: segmind
+    url: https://pypi.org/project/segmind/
+    install: pip install "segmind>=1.2.0"
+    official: true
+    version: 1.2.0
+    published: '2026-08-27'
+    repository: https://github.com/segmind/segmind-python
+    docs: https://docs.segmind.com/docs/sdks/python
+    note: >-
+      Async-by-default as of 1.1.0 — run() submits to the v2 async gateway and polls;
+      run_sync() is the blocking v1 call; submit_async() returns an AsyncJob handle.
+      The docs record a known defect: the segmind.pixelflows namespace raises
+      AttributeError in 1.1.0, so published PixelFlow workflows must be called over REST.
+  - language: javascript
+    registry: npm
+    name: segmind-npm
+    url: https://www.npmjs.com/package/segmind-npm
+    install: npm install segmind-npm
+    official: true
+    version: 0.1.2
+    published: '2023-10-27'
+    repository: https://github.com/segmind/segmind-npm
+    deprecated: true
+    note: >-
+      Published by the Segmind org but stale: last release 2023-10-27, description
+      "Generate image from text", and it predates the v2 async gateway entirely. The
+      current docs do not link it and list JavaScript/TypeScript as "Coming soon", so
+      it is recorded here as an abandoned first-party package, not a supported SDK.
+  - language: python
+    registry: pypi
+    name: segmind-py
+    url: https://github.com/segmind/segmind-py
+    official: true
+    version: null
+    published: null
+    superseded_by: segmind
+    note: >-
+      Superseded. The 2023 wrapper repo github.com/segmind/segmind-py opens with
+      "Deprecated — moved to segmind/segmind-python". No package named segmind-py is
+      published on PyPI (pypi.org/pypi/segmind-py/json returns 404), so version and
+      published are recorded null rather than guessed.
+registries_probed:
+  - registry: pypi
+    result: segmind 1.2.0 (2026-08-27); segmind-py 404
+  - registry: npm
+    result: segmind-npm 0.1.2 (2023-10-27); "segmind" and "@segmind/segmind" both 404
+  - registry: rubygems
+    result: not probed — no Ruby client referenced in docs or the GitHub org
+  - registry: crates.io
+    result: not probed — no Rust client referenced in docs or the GitHub org
+  - registry: maven-central
+    result: not probed — no JVM client referenced in docs or the GitHub org
+  - registry: nuget
+    result: not probed — no .NET client referenced in docs or the GitHub org
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

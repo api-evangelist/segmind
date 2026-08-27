@@ -1,8 +1,16 @@
 aid: segmind
 name: Segmind
 description: >-
-  We put the AI in API, delivering top AI models for rapid prototyping and seamless
-  deployment, ready to scale up as needed.
+  Segmind is a serverless GPU inference platform that puts 200+ generative AI models —
+  image, video, audio, 3D and LLM — behind one REST gateway with a single API key. Calls
+  are metered per GPU-second or per generation against a prepaid credit balance, with the
+  cost of every request reported inline on the response. The v2 asynchronous API is a
+  submit-poll-fetch job contract built for long-running video and upscaling work, while
+  the v1 synchronous route remains for fast models. Alongside the gateway, PixelFlow is a
+  visual workflow builder that chains models on a canvas and publishes any workflow as its
+  own production REST API, and dedicated endpoints run a chosen model on reserved GPUs
+  with autoscaling. A first-party Python SDK, a browser playground, media-editing
+  endpoints and a weekly dated changelog round out the developer surface.
 type: Index
 accessModel:
   pricing: freemium
@@ -20,51 +28,208 @@ accessModel:
 position: Consumer
 access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/segmind.png
-tags: []
+tags:
+- Artificial Intelligence
+- Machine Learning
+- Generative AI
+- Inference
+- Image Generation
+- Video Generation
+- Text to Image
+- Text to Video
+- Serverless
+- GPU
+- Workflows
+- Fine-Tuning
 created: '2025-03-01'
-modified: '2026-03-16'
+modified: '2026-08-27'
 url: >-
   https://raw.githubusercontent.com/api-evangelist/segmind/refs/heads/main/apis.yml
 specificationVersion: '0.23'
 common:
+  - type: Website
+    url: https://www.segmind.com/
+  - type: DeveloperPortal
+    url: https://docs.segmind.com/
+  - type: Documentation
+    url: https://docs.segmind.com/
+  - type: APIReference
+    url: https://docs.segmind.com/docs/serverless-api
+  - type: GettingStarted
+    url: https://docs.segmind.com/docs/get-started/quickstart
+  - type: Support
+    url: https://docs.segmind.com/docs/get-started/support
+  - type: SignUp
+    url: https://platform.segmind.com/
+  - type: Pricing
+    url: https://www.segmind.com/pricing
+  - type: TermsOfService
+    url: https://www.segmind.com/terms
+  - type: PrivacyPolicy
+    url: https://www.segmind.com/privacy
+  - type: StatusPage
+    url: https://status.segmind.com
+  - type: ChangeLog
+    url: changelog/segmind-changelog.yml
+  - type: Deprecation
+    url: lifecycle/segmind-lifecycle.yml
+  - type: Lifecycle
+    url: lifecycle/segmind-lifecycle.yml
+  - type: Plans
+    url: plans/segmind-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/segmind-rate-limits.yml
+  - type: FinOps
+    url: finops/segmind-finops.yml
   - type: AgenticAccess
     url: agentic-access/segmind-agentic-access.yml
   - type: DomainSecurity
     url: security/segmind-domain-security.yml
   - type: Authentication
     url: authentication/segmind-authentication.yml
+  - type: OAuthScopes
+    url: scopes/segmind-scopes.yml
+  - type: Conventions
+    url: conventions/segmind-conventions.yml
+  - type: ErrorCatalog
+    url: errors/segmind-error-codes.yml
+  - type: Conformance
+    url: conformance/segmind-conformance.yml
+  - type: Compliance
+    url: conformance/segmind-conformance.yml
+  - type: DataModel
+    url: data-model/segmind-data-model.yml
+  - type: Packages
+    url: packages/segmind-packages.yml
+  - type: SDKs
+    url: packages/segmind-packages.yml
+  - type: Sandbox
+    url: sandbox/segmind-sandbox.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: Webhooks
+    url: asyncapi/segmind-webhooks.yml
+  - type: LLMsTxt
+    url: llms/segmind-llms.txt
+  - type: LlmsText
+    url: https://www.segmind.com/llms.txt
   - type: GitHubOrganization
     url: https://github.com/segmind
   - type: LinkedIn
     url: https://www.linkedin.com/company/segmind
-  - type: LlmsText
-    url: https://www.segmind.com/llms.txt
   - type: Blog
     url: https://blog.segmind.com/feed
 apis:
 - aid: segmind:segmind
   name: Segmind
   description: >-
-    We put the AI in API, delivering top AI models for rapid prototyping and seamless deployment, ready
-    to scale up as needed.
-  humanURL: ' https://www.segmind.com/'
-  tags: []
+    The Segmind AI Gateway — one REST surface in front of 200+ generative AI models for
+    image, video, audio, 3D and text, authenticated with a single API key and metered
+    against a prepaid credit balance.
+  humanURL: https://www.segmind.com/
+  baseURL: https://api.segmind.com
+  tags:
+  - Artificial Intelligence
+  - Generative AI
   properties:
   - type: Documentation
-    url: ' https://www.segmind.com/'
+    url: https://docs.segmind.com/
+  - type: APIReference
+    url: https://docs.segmind.com/docs/serverless-api
+  - type: LLMsTxt
+    url: llms/segmind-docs-llms.txt
+- aid: segmind:segmind-inference-api
+  name: Segmind Inference API
+  description: >-
+    Synchronous (v1) and asynchronous (v2) model inference. v2 is the current contract —
+    submit a job, poll a lightweight status endpoint, fetch the result — and reports cost,
+    remaining credits and timings in a metrics object on every completed request.
+  humanURL: https://docs.segmind.com/docs/serverless-api/async-inference
+  baseURL: https://api.segmind.com
+  tags:
+  - Inference
+  properties:
+  - type: OpenAPI
+    url: openapi/segmind-inference-api-openapi.yml
+  - type: Overlay
+    url: overlays/segmind-inference-api-overlay.yaml
+  - type: APIReference
+    url: https://docs.segmind.com/docs/serverless-api
+  - type: AgentSkill
+    url: skills/segmind-async-inference.md
 - aid: segmind:segmind-account-api
   name: Segmind Account API
-  description: User account and credits
-  humanURL: ' https://www.segmind.com/'
+  description: >-
+    Read the account's spendable and free credit balance. Runs no model and costs nothing,
+    and is the documented way to verify that an API key works.
+  humanURL: https://docs.segmind.com/docs/platform/account-and-billing-apis
+  baseURL: https://api.segmind.com
   tags:
   - Account
   properties:
   - type: OpenAPI
     url: openapi/segmind-account-api-openapi.yml
+  - type: Overlay
+    url: overlays/segmind-account-api-overlay.yaml
+  - type: APIReference
+    url: https://docs.segmind.com/docs/platform/account-and-billing-apis
+- aid: segmind:segmind-storage-api
+  name: Segmind Storage API
+  description: >-
+    Upload a file to Segmind Storage and get a reusable URL to pass as an image input to
+    any model, instead of re-uploading the same file. Served from the workflows host.
+  humanURL: https://docs.segmind.com/docs/serverless-api/segmind-storage
+  baseURL: https://workflows-api.segmind.com
+  tags:
+  - Storage
+  properties:
+  - type: OpenAPI
+    url: openapi/segmind-storage-api-openapi.yml
+  - type: Overlay
+    url: overlays/segmind-storage-api-overlay.yaml
+  - type: APIReference
+    url: https://docs.segmind.com/docs/serverless-api/segmind-storage
+- aid: segmind:segmind-workflow-api
+  name: Segmind PixelFlow Workflow API
+  description: >-
+    Call a published PixelFlow workflow over REST. Submit to POST /workflows/v2/{slug} with
+    the key names given to the workflow's input nodes, poll the status URL, and fetch the
+    result — the same async contract and the same x-api-key header as model inference. The
+    result's output field is a JSON-stringified array of {keyname, value} pairs, one per
+    named output node.
+  humanURL: https://docs.segmind.com/docs/pixelflow/api-reference
+  baseURL: https://api.segmind.com
+  tags:
+  - Workflows
+  - Automation
+  properties:
+  - type: APIReference
+    url: https://docs.segmind.com/docs/pixelflow/api-reference
+  - type: Webhooks
+    url: asyncapi/segmind-webhooks.yml
+- aid: segmind:segmind-endpoints-api
+  name: Segmind Dedicated Endpoints API
+  description: >-
+    Manage dedicated GPU endpoints programmatically — list, add, update capacity and
+    delete. Served from a separate control-plane host and authenticated with the same
+    API key. Add, update and delete share one resource that selects the operation from the
+    HTTP method.
+  humanURL: https://docs.segmind.com/docs/serverless-api/dedicated-endpoints/endpoint-apis
+  baseURL: https://api.spotprod.segmind.com
+  tags:
+  - Infrastructure
+  - GPU
+  properties:
+  - type: APIReference
+    url: https://docs.segmind.com/docs/serverless-api/dedicated-endpoints/endpoint-apis
 - aid: segmind:segmind-fine-tuning-api
   name: Segmind Fine-tuning API
-  description: Fine-tuning request management and data handling
-  humanURL: ' https://www.segmind.com/'
+  description: >-
+    DEPRECATED. Fine-tuning request management and data handling. Segmind's fine-tuning
+    service no longer accepts new training jobs; existing fine-tuned models remain
+    available for inference until further notice.
+  humanURL: https://docs.segmind.com/docs/fine-tuning
+  baseURL: https://api.segmind.com
   tags:
   - Fine-Tuning
   tags_raw:
@@ -72,24 +237,15 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/segmind-fine-tuning-api-openapi.yml
-- aid: segmind:segmind-inference-api
-  name: Segmind Inference API
-  description: Synchronous and asynchronous model inference
-  humanURL: ' https://www.segmind.com/'
-  tags:
-  - Inference
-  properties:
-  - type: OpenAPI
-    url: openapi/segmind-inference-api-openapi.yml
-- aid: segmind:segmind-storage-api
-  name: Segmind Storage API
-  description: Upload reusable assets
-  humanURL: ' https://www.segmind.com/'
-  tags:
-  - Storage
-  properties:
-  - type: OpenAPI
-    url: openapi/segmind-storage-api-openapi.yml
+  - type: Overlay
+    url: overlays/segmind-fine-tuning-api-overlay.yaml
+  - type: Deprecation
+    url: lifecycle/segmind-lifecycle.yml
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-27'
+  status: enriched
+  artifacts_added: 20
+  pass: local-v1

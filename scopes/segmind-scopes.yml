@@ -1,0 +1,52 @@
+generated: '2026-08-27'
+method: searched
+source: https://docs.segmind.com/docs/get-started/authentication
+docs: https://docs.segmind.com/docs/get-started/authentication
+status: partial
+summary: >-
+  Segmind has no published OAuth scope reference. Two scope surfaces exist and only one of
+  them belongs to Segmind. This file records exactly what is published and nothing more —
+  the scope names below are the only two that appear anywhere in Segmind's documentation.
+segmind_scopes:
+  reference_page: null
+  note: >-
+    The only Segmind-issued scope names published anywhere are the two in the API-key
+    creation example on the authentication page. No scope reference page exists, no
+    enumeration of valid values is given, and the console is not documented as exposing
+    scope selection when a key is created. A 403 insufficient_scope error is documented,
+    so scopes are enforced somewhere, but a developer cannot discover the vocabulary.
+  scopes:
+    - name: 'read:models'
+      description: >-
+        Appears in the documented POST /api/keys request body example. No definition is
+        published.
+      source: 'https://docs.segmind.com/docs/get-started/authentication#api-key-management'
+    - name: 'write:inference'
+      description: >-
+        Appears in the same example. No definition is published.
+      source: 'https://docs.segmind.com/docs/get-started/authentication#api-key-management'
+identity_provider_scopes:
+  note: >-
+    These are requested BY Segmind AT the identity provider during social login. They are
+    Google/Microsoft/Discord scopes, not Segmind API scopes, and are recorded here only so
+    they are not mistaken for one.
+  providers:
+    - provider: Google
+      scopes: [email, profile]
+    - provider: Microsoft
+      scopes: ['user.read', profile, email]
+    - provider: Discord
+      scopes: [identify, email, guilds]
+oauth21_server:
+  status: announced
+  scopes_published: false
+  note: >-
+    The June 2026 release notes describe an OAuth 2.1 authorization server granting
+    "scoped, user-authorized access" to third-party applications and MCP clients. No scope
+    vocabulary for it is published, and no authorization-server metadata document exists
+    to enumerate scopes_supported. Probed 2026-08-27:
+    platform.segmind.com/.well-known/oauth-authorization-server -> 404.
+  source: https://docs.segmind.com/docs/platform/release-notes/2026-06-21-weekly
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

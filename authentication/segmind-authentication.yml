@@ -1,15 +1,156 @@
-generated: '2026-07-11'
-method: derived
-source: openapi/segmind-openapi.yml
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://docs.segmind.com/docs/get-started/authentication,
+  https://docs.segmind.com/docs/serverless-api,
+  https://docs.segmind.com/docs/platform/account-and-billing-apis,
+  https://docs.segmind.com/docs/pixelflow/api-reference,
+  https://docs.segmind.com/docs/platform/release-notes/2026-06-21-weekly,
+  openapi/ in this repo
+docs: https://docs.segmind.com/docs/get-started/authentication
 summary:
   types:
-  - apiKey
+    - apiKey
+    - http
+    - oauth2
   api_key_in:
-  - header
+    - header
+  primary: 'API key in the x-api-key header'
+  note: >-
+    Three distinct auth models on two distinct surfaces. The AI Gateway
+    (api.segmind.com, workflows-api.segmind.com, api.spotprod.segmind.com) takes an API
+    key in x-api-key and NOTHING else — it rejects the same key as a bearer token with 401.
+    The platform/console surface (platform.segmind.com) takes a JWT bearer token obtained
+    through OAuth 2.0 social login. Since June 2026 Segmind also runs its own OAuth 2.1
+    authorization server for third-party apps and MCP clients.
 schemes:
-- name: apiKeyAuth
-  type: apiKey
-  in: header
-  parameter: x-api-key
-  sources:
-  - openapi/segmind-openapi.yml
+  - name: apiKeyAuth
+    type: apiKey
+    in: header
+    parameter: x-api-key
+    surface: AI Gateway
+    hosts:
+      - https://api.segmind.com
+      - https://workflows-api.segmind.com
+      - https://api.spotprod.segmind.com
+    key_format:
+      prefix: SG_
+      body: 16 hexadecimal characters
+      total_length: 19
+      example_shape: SG_0123456789abcdef
+    expiry: >-
+      API keys do not expire. The docs recommend rotating them periodically.
+    management:
+      console: https://platform.segmind.com/api-keys
+      console_path: Developer -> API Keys
+      create: 'POST https://platform.segmind.com/api/keys (Authorization: Bearer <access_token>)'
+      revoke: 'DELETE https://platform.segmind.com/api/keys/{key_id}'
+      note: >-
+        Key management is itself a bearer-token operation on the platform host, not an
+        x-api-key operation on the gateway — so a key cannot rotate itself.
+    verification: >-
+      GET https://api.segmind.com/v1/get-user-credits is documented as the cheapest way to
+      confirm a key works: it runs no model and costs nothing.
+    sources:
+      - openapi/segmind-inference-api-openapi.yml
+      - openapi/segmind-account-api-openapi.yml
+      - openapi/segmind-fine-tuning-api-openapi.yml
+      - openapi/segmind-storage-api-openapi.yml
+      - https://docs.segmind.com/docs/get-started/authentication
+  - name: bearerJWT
+    type: http
+    scheme: bearer
+    bearerFormat: JWT
+    surface: Platform / console API
+    host: https://platform.segmind.com
+    header: 'Authorization: Bearer <access_token>'
+    claims: [jti, exp, iat, nbf, identity]
+    identity_claim: 'identity — the email of the token user'
+    access_token_lifetime: 1 hour
+    refresh_token_lifetime: 30 days
+    refresh: 'POST https://platform.segmind.com/auth/refresh with Authorization: Bearer <refresh_token>'
+    cookie: >-
+      The access token is also stored automatically in an HTTP-only secure cookie with a
+      30-day expiration, used for subsequent console requests.
+    note: >-
+      Not accepted by the AI Gateway. Sending a bearer token to api.segmind.com returns
+      401 regardless of the endpoint.
+    in_openapi: false
+  - name: oauth2SocialLogin
+    type: oauth2
+    flow: authorizationCode
+    surface: Platform sign-in
+    authorization_url: https://platform.segmind.com/auth/login
+    redirect_url: 'https://platform.segmind.com/api/login/{provider}/authorized'
+    token_response: '{"access_token": "...", "refresh_token": "...", "expires_in": 3600}'
+    providers:
+      - name: Google
+        scopes: [email, profile]
+      - name: Microsoft
+        scopes: [user.read, profile, email]
+      - name: Discord
+        scopes: [identify, email, guilds]
+    note: >-
+      These are the scopes Segmind requests AT the identity provider in order to sign a
+      user in — they are not Segmind API scopes. See scopes/segmind-scopes.yml.
+    in_openapi: false
+  - name: oauth21AuthorizationServer
+    type: oauth2
+    surface: Third-party application access
+    status: announced
+    announced: '2026-06-16'
+    endpoint_base: '/oauth/ (host not stated in the release note)'
+    description: >-
+      Segmind runs an OAuth 2.1 authorization server so third-party applications,
+      "including MCP clients", can request scoped, user-authorized access and call the API
+      without ever handling an API key. Described as fully additive.
+    discoverable: false
+    note: >-
+      Not discoverable and not documented beyond the release note. There is no
+      /.well-known/oauth-authorization-server (RFC 8414) or
+      /.well-known/oauth-protected-resource (RFC 9728) on any Segmind host, no scope
+      reference, no registration flow, and no page under /docs describing it. Probed
+      2026-08-27: platform.segmind.com/.well-known/oauth-authorization-server -> 404,
+      platform.segmind.com/oauth/authorize -> 404, api.segmind.com/oauth/authorize -> 400.
+      Recorded as announced-but-undiscoverable rather than as a usable scheme.
+    in_openapi: false
+    source: https://docs.segmind.com/docs/platform/release-notes/2026-06-21-weekly
+mutual_tls: false
+openid_connect: false
+errors:
+  - status: 401
+    code: invalid_token
+    description: Token is invalid or expired.
+  - status: 401
+    code: invalid_api_key
+    description: API key is invalid.
+  - status: 403
+    code: insufficient_scope
+    description: Token lacks required permissions.
+  - status: 429
+    code: rate_limit_exceeded
+    description: Too many requests.
+auth_rate_limits:
+  - scope: ip
+    surface: Authentication endpoints
+    limit: 5 requests/minute
+  - scope: user
+    surface: Token refresh
+    limit: 10 requests/hour
+best_practices_published:
+  - Never expose API keys in client-side code
+  - Use environment variables for key storage (the Python SDK reads SEGMIND_API_KEY)
+  - Rotate API keys periodically
+  - Implement retry logic with exponential backoff
+  - Watch Cost Analytics, which can filter by API key and break spend down per key
+gaps:
+  - >-
+    No per-key scoping is exposed to users. The key-creation example accepts a scopes
+    array, but no scope reference is published and the console UI is not documented as
+    offering it.
+  - >-
+    No OIDC discovery, no JWKS endpoint, and no published token-introspection or
+    revocation endpoint for the JWT surface.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

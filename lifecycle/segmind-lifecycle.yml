@@ -1,0 +1,128 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://docs.segmind.com/docs/serverless-api,
+  https://docs.segmind.com/docs/serverless-api/async-inference,
+  https://docs.segmind.com/docs/fine-tuning,
+  https://docs.segmind.com/docs/platform/release-notes,
+  https://status.segmind.com,
+  https://www.segmind.com/pricing,
+  https://docs.segmind.com/docs/serverless-api/logging
+versioning:
+  scheme: path-prefix
+  current: v2
+  versions:
+    - version: v1
+      status: maintenance
+      description: >-
+        Blocking synchronous inference. "Fine for fast models that finish in a few
+        seconds", documented as in maintenance mode. Still fully served, and still the
+        only route the provider's own Claude Code skill uses.
+    - version: v2
+      status: current
+      description: Asynchronous submit-poll-fetch, the recommended path for all new work.
+  policy_published: false
+  note: >-
+    Segmind publishes no version-support or version-sunset policy. v1's maintenance status
+    is stated in a callout on the async-inference page, not in a lifecycle policy, and no
+    end-of-life date is given for it.
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  note: >-
+    No RFC 8594 Sunset or Deprecation headers are documented, and there is no written
+    deprecation policy or notice period. Deprecations are announced in prose in the docs
+    and release notes. What Segmind does do well is fail loudly at runtime: calls to
+    retired or deprecated models return 410 Gone and are not charged.
+  deprecated:
+    - subject: Fine-tuning service
+      status: deprecated
+      announced_in: https://docs.segmind.com/docs/fine-tuning
+      statement: >-
+        "The Segmind fine-tuning service is deprecated and no longer accepts new training
+        jobs. Existing fine-tuned models remain available for inference until further
+        notice."
+      affects:
+        - openapi/segmind-fine-tuning-api-openapi.yml
+        - 'apis[] entry segmind:segmind-fine-tuning-api'
+        - 'operations: submitFinetune, getFinetuneDetails, listFinetuneRequests, updateFinetuneAccess, getFinetuneUploadUrl, downloadFinetuneFile'
+      sunset_date: null
+      note: >-
+        The entire /docs/fine-tuning tree — dataset preparation, inference guide, pricing,
+        GPU options and all five per-model fine-tuning API references — is marked
+        Deprecated. This repo's Fine-tuning API entry therefore documents a surface that
+        no longer accepts new work; it is kept and flagged rather than removed, because
+        existing fine-tuned models are still callable.
+    - subject: Fine-tuning webhook events
+      status: deprecated
+      events: [DATA_PROCESSING, TRAINING_INITIATED, TRAINING_COMPLETED, DEPLOYING, AVAILABLE]
+      statement: >-
+        "listed here for existing integrations only" — they relate to the fine-tuning
+        service, which no longer accepts new training jobs.
+      source: https://docs.segmind.com/docs/serverless-api/webhooks
+    - subject: segmind.run_async() in the Python SDK
+      status: removed
+      removed_in: 1.1.0
+      replacement: segmind.run()
+      statement: >-
+        "1.1.0 is a breaking release. run() is now async (v2). The old blocking behaviour
+        moved to run_sync(), and run_async() was removed."
+      source: https://docs.segmind.com/docs/sdks/python
+    - subject: github.com/segmind/segmind-py (2023 Python wrapper)
+      status: deprecated
+      replacement: https://github.com/segmind/segmind-python
+      statement: '"Deprecated — moved to segmind/segmind-python ... its examples no longer work."'
+    - subject: Individual models
+      status: rolling
+      note: >-
+        Models are retired on their own schedule with no published notice period. A call to
+        a retired model returns 410 Gone and is not charged.
+  known_defects:
+    - subject: segmind.pixelflows namespace in the Python SDK
+      version: 1.1.0
+      statement: >-
+        "every method on it raises AttributeError in 1.1.0 — that is a known defect on our
+        side". Published PixelFlow workflows must be called over REST until a fix ships.
+      source: https://docs.segmind.com/docs/sdks
+status_page:
+  url: https://status.segmind.com
+  status: 200
+  verified: '2026-08-27'
+  note: Live, on its own subdomain. Linked from the authentication docs support section.
+sla:
+  published: true
+  target: 99.99%
+  scope: Enterprise plan only
+  source: https://www.segmind.com/pricing
+  note: >-
+    The 99.99% figure is a bullet on the Enterprise plan card. No SLA, credit schedule or
+    uptime commitment is published for Flexible, Pro, Business or Scale.
+support_tiers:
+  - plan: Flexible
+    response: Community (Discord)
+  - plan: Pro
+    response: 5 business days
+  - plan: Business
+    response: 2 business days
+  - plan: Scale
+    response: 1 business day
+  - plan: Enterprise
+    response: Dedicated Slack support
+support_tiers_source: https://www.segmind.com/pricing
+release_cadence:
+  cadence: weekly
+  url: https://docs.segmind.com/docs/platform/release-notes
+  latest: '2026-08-23'
+  note: >-
+    Release notes are summarised every week and dated. See
+    changelog/segmind-changelog.yml.
+retention:
+  outputs: 7 days
+  request_records: 'short-lived; expire before the output file, after which the poll endpoints 404'
+  inputs: 'input images, video and audio are not stored; prompts and parameters are'
+  source: https://docs.segmind.com/docs/serverless-api/logging
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,79 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://docs.segmind.com/docs/get-started/playground,
+  https://docs.segmind.com/docs/get-started/models,
+  https://docs.segmind.com/docs/pixelflow/the-editor,
+  https://docs.segmind.com/docs/serverless-api/random-seed,
+  https://docs.segmind.com/docs/platform/pricing-and-billing
+type: playground
+test_mode: false
+summary: >-
+  Segmind ships a browser playground and a visual workflow editor, but no test mode. There
+  is no sandbox key, no test-vs-live key prefix, no free simulated response and no fixture
+  or trigger tooling — every call in the playground runs a real model and spends real
+  credits. This is the standard shape for metered inference: the "sandbox" is a console
+  you can experiment in, priced identically to production.
+surfaces:
+  - name: Model Playground
+    url: https://platform.segmind.com
+    docs: https://docs.segmind.com/docs/get-started/playground
+    description: >-
+      Run any Segmind model in the browser. A compose dock, one-click settings, up to three
+      generations at once, a session strip, and the ability to edit the raw request as
+      JSON before sending it — which makes it a request builder as well as a demo.
+    billed: true
+  - name: Per-model API tab
+    url: 'https://www.segmind.com/models/{slug}/api'
+    description: >-
+      Each model page carries an API tab listing every parameter the model accepts with
+      example code, organised as Mode (Sync / Async) x Language and defaulting to the
+      async examples. This is the parameter reference the gateway itself does not publish
+      as a spec.
+    billed: false
+  - name: PixelFlow editor
+    url: https://platform.segmind.com
+    docs: https://docs.segmind.com/docs/pixelflow/the-editor
+    description: >-
+      Visual workflow canvas with model search, an asset gallery, a logs panel, run
+      controls and undo/redo. Individual nodes can be run on their own using upstream
+      nodes' saved outputs.
+    billed: true
+test_credentials: none
+test_values: none
+fixtures: none
+time_simulation: none
+key_prefixes:
+  live: SG_
+  test: null
+  note: One key format, one mode. There is no test-mode key.
+cost_control:
+  - name: Pinning and caching
+    description: >-
+      Pinning a node in PixelFlow caches its output across runs, skipping re-execution and
+      saving credits while iterating on downstream steps. The nearest thing Segmind
+      publishes to a cheap rehearsal loop.
+    source: https://docs.segmind.com/docs/pixelflow/guides/pinning-and-caching
+  - name: Seed reproducibility
+    description: >-
+      Pass a positive integer seed for reproducible output, or -1 for random; v1 returns
+      the seed actually used in x-seed-value so a random run can be replayed exactly.
+    source: https://docs.segmind.com/docs/serverless-api/random-seed
+  - name: Failed requests are free
+    description: >-
+      Only HTTP 200 is charged; every error rolls the credit reservation back in full, so
+      a malformed experiment costs nothing.
+    source: https://docs.segmind.com/docs/platform/pricing-and-billing
+  - name: Free entry credits
+    description: >-
+      New accounts start on the Flexible plan with a small free-credit balance, reported
+      separately from spendable credits as free-credits by GET /v1/get-user-credits.
+    source: https://docs.segmind.com/docs/platform/account-and-billing-apis
+  - name: Team spend limits
+    description: >-
+      A per-member spend limit can be set; hitting it returns 406 with a message naming
+      the period and the cap.
+    source: https://docs.segmind.com/docs/platform/teams
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

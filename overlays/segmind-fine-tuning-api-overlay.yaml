@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://spec.openapis.org/overlay/1.0.0/schema.json
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Segmind Fine Tuning Api
+  version: 1.0.0
+x-provenance:
+  generated: '2026-08-27'
+  method: generated
+  source: >-
+    https://docs.segmind.com/ (Segmind's own documentation), applied over
+    openapi/segmind-fine-tuning-api-openapi.yml in this repo.
+  note: >-
+    This overlay records API Evangelist's enhancements. It never mutates
+    openapi/segmind-fine-tuning-api-openapi.yml, and it adds only facts published by Segmind in its
+    documentation.
+extends: ../openapi/segmind-fine-tuning-api-openapi.yml
+actions:
+  - target: $.info
+    description: Record where the runtime semantics for this API are documented. Segmind publishes no OpenAPI of its own; these enhancements come from its documentation.
+    update:
+      x-docs: https://docs.segmind.com/docs/serverless-api
+      x-error-catalog: errors/segmind-error-codes.yml
+      x-conventions: conventions/segmind-conventions.yml
+      x-rate-limits: rate-limits/segmind-rate-limits.yml
+      x-authentication: authentication/segmind-authentication.yml
+      x-lifecycle: lifecycle/segmind-lifecycle.yml
+  - target: $.components.securitySchemes.apiKeyAuth
+    description: >-
+      Document the published key format and the fact that the gateway rejects the same key
+      as a bearer token.
+    update:
+      description: >-
+        Segmind API key. Prefix "SG_" followed by 16 hexadecimal characters (19 characters
+        total). The gateway does NOT accept this key as a bearer token — sending it in an
+        Authorization header returns 401 on every endpoint. Create and revoke keys at
+        https://platform.segmind.com/api-keys.
+      x-key-prefix: SG_
+      x-verification-endpoint: https://api.segmind.com/v1/get-user-credits
+  - target: $.info
+    description: >-
+      Flag the whole API as deprecated. The Segmind fine-tuning service no longer accepts
+      new training jobs.
+    update:
+      x-lifecycle-status: deprecated
+      x-deprecation-notice: >-
+        The Segmind fine-tuning service is deprecated and no longer accepts new training
+        jobs. Existing fine-tuned models remain available for inference until further
+        notice.
+      x-deprecation-source: https://docs.segmind.com/docs/fine-tuning
+      x-sunset-date: null
+  - target: $.paths['/finetune/request/submit'].post
+    description: Mark the submit operation as no longer accepting new jobs.
+    update:
+      deprecated: true
+      x-deprecation-notice: No longer accepts new training jobs.

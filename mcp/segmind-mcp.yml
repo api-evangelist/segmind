@@ -1,0 +1,94 @@
+generated: '2026-08-27'
+method: derived
+source: >-
+  openapi/ in this repo; probes of api.segmind.com, platform.segmind.com,
+  www.segmind.com, mcp.segmind.com and cloud.segmind.com on 2026-08-27;
+  https://docs.segmind.com/docs/platform/release-notes/2026-06-21-weekly
+status: candidate
+pointer_emitted: false
+pointer_note: >-
+  No type: MCPServer pointer is wired into apis.yml for this file. Segmind ships no MCP
+  server, and an MCPServer pointer would assert an agent surface the provider does not
+  serve. The file is kept as the record of the probe and of the derived candidate.
+summary: >-
+  Segmind publishes no MCP server. The candidate tool list below is DERIVED by API
+  Evangelist from the operations in this repo's OpenAPI and is not something Segmind
+  ships. Recorded because the ingredients are unusually close: Segmind stood up an OAuth
+  2.1 authorization server in June 2026 explicitly so that "third-party applications —
+  including MCP clients — can request scoped, user-authorized access", and it publishes a
+  Claude Code skill of its own (skills/segmind-media-generation.md) — but no MCP endpoint
+  and no stdio package exist to point that authorization server at.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: probed
+  note: >-
+    No hosted endpoint and no installable server were found. mcp.segmind.com does not
+    resolve (DNS NXDOMAIN). https://www.segmind.com/mcp, https://www.segmind.com/api/mcp
+    and https://platform.segmind.com/mcp all return 404 HTML. https://api.segmind.com/mcp
+    returns the gateway's 400 "Incorrect or Missing host header", the same response it
+    gives every unrouted path, so it is not a route. No @segmind npm scope exists and no
+    MCP server appears in the GitHub org's 16 public repositories.
+probes:
+  - url: https://mcp.segmind.com/mcp
+    status: null
+    result: DNS NXDOMAIN — host does not resolve
+  - url: https://api.segmind.com/mcp
+    status: 400
+    result: '"Incorrect or Missing host header" — the edge default for an unrouted path'
+  - url: https://www.segmind.com/mcp
+    status: 404
+  - url: https://www.segmind.com/api/mcp
+    status: 404
+  - url: https://platform.segmind.com/mcp
+    status: 404
+  - url: https://platform.segmind.com/.well-known/oauth-protected-resource
+    status: 404
+    result: >-
+      No RFC 9728 metadata, so even the announced OAuth 2.1 server is not discoverable by
+      an MCP client.
+candidate_tools:
+  - name: run_model
+    rest: [invokeModelAsync]
+    description: >-
+      Submit an inference request to any model in the Segmind catalogue and return a
+      request id. Maps to POST /v2/{model_name}.
+    consequence: billable-write
+  - name: get_request_status
+    rest: [getRequestStatus]
+    description: Check the status and metrics of a submitted request without the output payload.
+    consequence: read
+  - name: get_request_result
+    rest: [getRequestResult]
+    description: Fetch the completed result for a request id.
+    consequence: read
+  - name: run_model_sync
+    rest: [invokeModelSync]
+    description: >-
+      Blocking inference on the v1 route, returning raw output bytes. v1 is in maintenance
+      mode; prefer run_model.
+    consequence: billable-write
+  - name: get_user_credits
+    rest: [getUserCredits]
+    description: >-
+      Read the account's spendable credit balance. Costs nothing and is the natural
+      spend-guard check before any billable tool call.
+    consequence: read
+  - name: upload_asset
+    rest: [uploadAsset]
+    description: >-
+      Upload a file to Segmind Storage and get a reusable URL to pass as model input.
+      Served from workflows-api.segmind.com, not the main gateway.
+    consequence: write
+derivation_note: >-
+  Only operations present in openapi/ are listed. The six deprecated fine-tuning
+  operations are deliberately excluded because the service no longer accepts new jobs. A
+  real Segmind MCP server would also need a model-discovery tool — the catalogue of 200+
+  model slugs is published as www.segmind.com/llms.txt (captured in llms/), not as an API
+  operation, so no such tool could be derived from the contract.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

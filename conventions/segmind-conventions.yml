@@ -1,0 +1,232 @@
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://docs.segmind.com/docs/serverless-api,
+  https://docs.segmind.com/docs/serverless-api/async-inference,
+  https://docs.segmind.com/docs/get-started/authentication,
+  https://docs.segmind.com/docs/platform/account-and-billing-apis,
+  https://docs.segmind.com/docs/platform/pricing-and-billing,
+  https://docs.segmind.com/docs/platform/refund-policy,
+  https://docs.segmind.com/docs/serverless-api/logging,
+  openapi/ in this repo
+summary: >-
+  Cross-cutting runtime semantics for the Segmind AI Gateway. The gateway is a
+  submit-poll-fetch job API in front of a model catalogue: one POST per job, a request id,
+  two GET endpoints to follow it, and per-request cost reported inline. There is no
+  collection surface, so there is no pagination and no sparse-fieldset or expansion
+  vocabulary. The single most consequential convention is the absence of idempotency —
+  documented explicitly, not merely omitted.
+authentication:
+  style: api-key-header
+  header: x-api-key
+  key_format: 'SG_ prefix + 16 hexadecimal characters (19 characters total)'
+  bearer_accepted: false
+  note: >-
+    The gateway rejects the API key sent as a bearer token with 401 on every endpoint.
+    JWT bearer tokens are a separate console/platform surface on platform.segmind.com, not
+    the model gateway. See authentication/segmind-authentication.yml.
+  docs: https://docs.segmind.com/docs/get-started/authentication
+idempotency:
+  supported: false
+  key_header: null
+  scope: null
+  retention: null
+  statement: >-
+    "Each POST /v2/{slug} creates a NEW request_id. The submit is the only step worth
+    retrying: if a submit returns a 5xx, retry the submit (you'll get a fresh request_id).
+    Never retry by re-POSTing after a successful submit — that starts a second billable
+    job. Polling (GET) is always safe to retry."
+  consequence: >-
+    An agent that retries a submit after a timeout with an ambiguous outcome will be
+    charged twice and receive two outputs, with no server-side way to collapse them. There
+    is no idempotency key, no request-supplied client token, and no dedupe window.
+  safe_to_retry: [getRequestStatus, getRequestResult, getUserCredits]
+  unsafe_to_retry: [invokeModelSync, invokeModelAsync, uploadAsset]
+  docs: https://docs.segmind.com/docs/serverless-api/async-inference#idempotency
+pagination:
+  supported: false
+  note: >-
+    No paginated collection is documented. The one list-shaped operation in the captured
+    spec, listFinetuneRequests, belongs to the deprecated fine-tuning service and returns
+    a bare array with no page parameters. The endpoint control plane's /endpoint/list is
+    likewise unpaginated.
+field_expansion:
+  supported: false
+  note: >-
+    Not a field-selection API, but there is an equivalent choice: getRequestStatus
+    (/v2/requests/{id}/status) returns status and metrics WITHOUT the output payload, and
+    getRequestResult (/v2/requests/{id}) returns the full body. Poll the first, fetch the
+    second once.
+metadata:
+  supported: false
+  note: No user-supplied metadata or tagging field is documented on a request.
+request_tracing:
+  request_id_field: request_id
+  request_id_header: x-request-id
+  note: >-
+    v1 synchronous responses return x-request-id; v2 async responses carry request_id in
+    the body. Both correspond to the entry the console's Generations view lists, so a
+    request id captured at call time is the join key to the provider's own log.
+  docs: https://docs.segmind.com/docs/serverless-api/monitoring
+versioning:
+  style: path-prefix
+  versions:
+    - version: v1
+      status: maintenance
+      description: >-
+        Blocking synchronous call. Returns the model output as the raw response body
+        (image bytes, not JSON) with accounting in response headers. Documented as being
+        in maintenance mode.
+    - version: v2
+      status: current
+      description: >-
+        Asynchronous submit-poll-fetch. Returns JSON throughout, with accounting in a
+        metrics object.
+  note: >-
+    Version is chosen per call by path prefix, not by header or media type, and the two
+    versions are semantically different contracts rather than revisions of one.
+error_envelope:
+  shape: '{"error": "<human-readable message>"}'
+  rfc9457: false
+  content_type: application/json
+  exceptions:
+    - >-
+      405 Method Not Allowed returns an HTML error page, not JSON. A client that calls
+      .json() on every response without checking status will throw here rather than report
+      the real problem.
+  async_failure_shape: >-
+    A failed v2 job returns HTTP 422 with {"status": "FAILED", "error": "...", "metrics":
+    {...}} — timings present, billing fields absent because nothing was charged.
+  auth_error_shape: >-
+    The auth surface uses a different, OAuth-style envelope: {"error": "invalid_token",
+    "error_description": "...", "status_code": 401}.
+  catalog: errors/segmind-error-codes.yml
+rate_limit_signaling:
+  status: 429
+  headers_returned: [x-rate-limit-reset-at-utc]
+  retry_after: false
+  note: >-
+    Only a reset timestamp is published. No limit/remaining counters and no Retry-After,
+    so a client cannot budget ahead of the throttle. See rate-limits/segmind-rate-limits.yml.
+cost_signaling:
+  sync_headers: [x-cost, x-remaining-credits, x-generation-time, x-seed-value, x-request-id]
+  async_fields: [metrics.cost, metrics.remaining_credits, metrics.inference_time, metrics.queue_time, metrics.total_time, metrics.retry_count]
+  note: >-
+    Unusually complete for this market: every billed call reports what it cost and what is
+    left, on the same response. This is the field an autonomous agent needs to enforce its
+    own spend cap without a second API call.
+determinism:
+  seed_parameter: seed
+  note: >-
+    Pass -1 for a random seed or a positive integer for reproducible output. Where the
+    model reports one, v1 returns the seed actually used in x-seed-value, so a random run
+    can be replayed exactly.
+  docs: https://docs.segmind.com/docs/serverless-api/random-seed
+dry_run_mode:
+  supported: false
+  note: >-
+    No rehearsal or estimate-only mode. The closest published equivalents are reading a
+    model's price from its pricing tab before calling it, and getUserCredits, which costs
+    nothing and reads the same balance the gateway checks before running a model.
+data_retention:
+  outputs: 7 days, after which output files are automatically deleted
+  request_records: >-
+    Expire well before the output file; once expired all three poll endpoints return 404
+    and the output URL cannot be recovered from the API.
+  inputs: >-
+    Prompts and configuration parameters are stored for caching and UX. Input images,
+    videos and audio are NOT stored. Fine-tuning images were held temporarily and could be
+    deleted on request.
+  docs: https://docs.segmind.com/docs/serverless-api/logging
+reversibility:
+  grade: documented
+  write_surface: true
+  summary: >-
+    Segmind's API write surface is job submission and asset upload, and neither has a
+    documented cancel, abort or delete operation — once a job is submitted there is no
+    published way to stop it or to remove its output. What IS reversible is money and
+    infrastructure: failed jobs are never charged, credit purchases can be refunded, and
+    dedicated endpoints can be deleted. Graded `documented` rather than `verified` because
+    no reversal path on the API itself carries a stated window; the one window Segmind
+    does state is on refunds and is conditional ("before the unused credits expire")
+    rather than a fixed duration.
+  surfaces:
+    - operation: invokeModelAsync
+      operationId: invokeModelAsync
+      reversal: none
+      window: null
+      note: >-
+        No cancel endpoint is documented for an in-flight request. The only relief is
+        economic: a job that fails is not charged, and only HTTP 200 is billed. A job that
+        succeeds is billed and cannot be un-run.
+    - operation: invokeModelSync
+      operationId: invokeModelSync
+      reversal: none
+      window: null
+      note: Same as the async path; a completed sync call is billed and final.
+    - operation: uploadAsset
+      operationId: uploadAsset
+      reversal: none
+      window: null
+      note: >-
+        No delete-asset operation is documented for Segmind Storage. Uploaded assets get a
+        reusable URL; the docs describe no way to revoke it. Generated outputs expire on
+        the 7-day retention clock, which is expiry, not a reversal an agent can invoke.
+    - operation: Delete a dedicated endpoint
+      operationId: null
+      reversal: destructive
+      window: null
+      endpoint: DELETE https://api.spotprod.segmind.com/endpoint/delete
+      note: >-
+        This is the reverse of endpoint creation, and it is itself irreversible. The docs
+        carry an explicit trap: the same resource serves add/update/delete and picks the
+        operation from the HTTP method, so omitting -XDELETE while sending a body makes
+        curl POST and the request is handled as an endpoint CREATION.
+    - operation: Credit purchase
+      operationId: null
+      reversal: refund
+      window: 'while the credits are unused AND unexpired'
+      channel: email support@segmind.com
+      note: >-
+        Full or partial refund of credits that have not yet been used, requested by email
+        before the unused credits expire. Segmind verifies the unused, unexpired balance
+        and refunds it minus transaction fees. Expiry is per credit batch and the batch
+        closest to expiring is spent first, so the window is real but account-specific —
+        the docs state no fixed number of days.
+      docs: https://docs.segmind.com/docs/platform/refund-policy
+    - operation: Subscription
+      operationId: null
+      reversal: refund
+      window: >-
+        subscription must be active or recently cancelled, and the request must arrive
+        before the unused credits expire
+      channel: email support@segmind.com
+      note: >-
+        Refund is calculated on unused, unexpired credits; approval cancels the
+        subscription immediately. Segmind reserves final authority to approve or deny.
+      docs: https://docs.segmind.com/docs/platform/refund-policy
+    - operation: Account deletion
+      operationId: null
+      reversal: none
+      window: null
+      note: >-
+        Explicitly irreversible. Deletion is a REQUEST that moves REQUESTED →
+        IN_PROGRESS; it cancels team memberships and stops API keys working. A negative
+        credit balance blocks it, and only one request can be open at a time.
+      docs: https://docs.segmind.com/docs/platform/settings
+  agent_guidance: >-
+    Before acting: an agent can safely retry any GET and can safely let a job fail, but
+    must treat a successful submit as final and unrepeatable. The cost of a mistake is
+    bounded by the per-request cost reported in x-cost / metrics.cost, and by the credit
+    balance, which is the real circuit breaker — the gateway refuses a call when the
+    balance is below the model's cost.
+cross_references:
+  errors: errors/segmind-error-codes.yml
+  lifecycle: lifecycle/segmind-lifecycle.yml
+  authentication: authentication/segmind-authentication.yml
+  rate_limits: rate-limits/segmind-rate-limits.yml
+  plans: plans/segmind-plans-pricing.yml
+  webhooks: asyncapi/segmind-webhooks.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

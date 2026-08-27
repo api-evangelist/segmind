@@ -1,0 +1,114 @@
+generated: '2026-08-27'
+method: probed
+source: >-
+  Direct HTTPS probes of every apis.yml and OpenAPI servers[] host, plus the docs,
+  console and dedicated-endpoint hosts, 2026-08-27.
+summary: >-
+  Segmind serves no /.well-known/ discovery surface. Every RFC 8615 path probed on every
+  host returned 404 or a redirect to a login. Three of the five hosts answer 404 with a
+  full HTML application shell (Next.js / Vercel), so byte counts are recorded to make the
+  catch-all behaviour visible; none of them returned a document. No WellKnown or
+  SecurityTxt pointer is emitted, because none of these probes found a served document.
+hit_count: 0
+hosts:
+  - host: https://www.segmind.com
+    note: Next.js marketing site; 404s return a 65,725-byte HTML shell.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://api.segmind.com
+    note: >-
+      The AI Gateway edge answers every unrouted path with HTTP 400 "Incorrect or Missing
+      host header" (32 bytes) rather than 404. Routed paths behave normally — GET
+      /v1/get-user-credits returns 401 with a JSON error — so the host is live and the 400
+      is an edge policy on unknown paths, not a block on our crawler.
+    documents:
+      - path: /.well-known/security.txt
+        status: 400
+      - path: /.well-known/oauth-authorization-server
+        status: 400
+      - path: /.well-known/oauth-protected-resource
+        status: 400
+      - path: /.well-known/api-catalog
+        status: 400
+      - path: /.well-known/agent-card.json
+        status: 400
+      - path: /.well-known/agent.json
+        status: 400
+  - host: https://workflows-api.segmind.com
+    note: Flask-style 404 (207 bytes), not a catch-all shell.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+  - host: https://docs.segmind.com
+    note: Docs host; 404s return an 11,260-byte HTML shell.
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+  - host: https://platform.segmind.com
+    note: >-
+      Console. 404s return a 14,803-byte HTML shell. Probed specifically because the
+      2026-06-21 release notes announce an OAuth 2.1 authorization server with "endpoints
+      under /oauth/" — no RFC 8414 or RFC 9728 metadata document is served for it, and
+      /oauth/authorize itself 404s anonymously.
+    documents:
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /.well-known/agent-card.json
+        status: 404
+      - path: /.well-known/agent.json
+        status: 404
+  - host: https://cloud.segmind.com
+    note: >-
+      Every /.well-known/ path 307s to /auth/login?redirect=... — the whole host is behind
+      a session gate, so nothing is discoverable anonymously.
+    documents:
+      - path: /.well-known/oauth-authorization-server
+        status: 307
+      - path: /.well-known/agent-card.json
+        status: 307
+  - host: https://api.spotprod.segmind.com
+    note: >-
+      Dedicated-endpoints control plane, named only in the docs (not in apis.yml or any
+      servers[] block). Live — GET /endpoint/list returns 401 with a JSON error — but
+      serves no discovery documents.
+    documents:
+      - path: /.well-known/agent-card.json
+        status: 404
+gaps:
+  - >-
+    No security.txt on any host, so there is no machine-readable route for reporting a
+    vulnerability (RFC 9116).
+  - >-
+    An OAuth 2.1 authorization server is announced in the June 2026 release notes and is
+    explicitly aimed at MCP clients, but publishes neither RFC 8414 authorization-server
+    metadata nor RFC 9728 protected-resource metadata, so no client can discover it.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

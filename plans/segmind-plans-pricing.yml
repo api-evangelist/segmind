@@ -3,137 +3,256 @@ specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
 provider: Segmind
 providerId: segmind
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://www.segmind.com/pricing,
+  https://docs.segmind.com/docs/platform/pricing-and-billing
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
-tags: []
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
+modified: '2026-08-27'
+tags:
+  - Pricing
+  - Plans
+  - Credits
+description: >-
+  Segmind's published subscription plans and consumption pricing, harvested from the
+  pricing page and the pricing-and-billing documentation on 2026-08-27. This replaces the
+  2026-05-04 scaffold, whose tiers and quotas were placeholder values. Every plan bundles
+  a monthly credit allowance; model usage is then metered against those credits either per
+  GPU-second or per generation, depending on the model.
+plan_count: 5
+billing_model:
+  unit: credits (US dollars)
+  metering:
+    - name: Per GPU-second
+      description: >-
+        Charged on GPU processing time, measured per second. Models run on A100, H100 and
+        L40S hardware across several clouds, so price varies by model — higher-end GPUs
+        cost more per second but finish faster. Each model page carries its price, GPU
+        type and expected generation speed.
+    - name: Per generation
+      description: >-
+        Credits deducted per generation. Parameters such as video duration or output
+        resolution change the price of a single generation; the model's pricing tab has
+        the exact figures.
+  reservation: >-
+    Credits are reserved against an estimate before a model runs, which is what refuses a
+    call when the balance is below the model's cost. The reservation is internal — the
+    balance does not dip while running, drops once by the ACTUAL cost on completion, and
+    is unchanged on failure. The actual cost can be lower than the estimate; the estimate
+    is never charged.
+  billed_statuses: Only HTTP 200 is charged. Every error response rolls the reservation back in full.
+  observability:
+    per_request_sync_headers: [x-cost, x-remaining-credits]
+    per_request_async_fields: [metrics.cost, metrics.remaining_credits]
+    balance_endpoint: GET https://api.segmind.com/v1/get-user-credits
+  pixelflow: A PixelFlow workflow run costs the sum of the models it runs.
+  billing_period: monthly, with an annual option advertised as "2 months free"
 plans:
-  - id: segmind-free
-    name: Free
+  - id: segmind-flexible
+    name: Flexible
     type: freemium
-    description: Free entry tier for the Segmind API surface. Intended for evaluation, prototyping, and
-      low-volume integrations. Real limits and pricing must be reconciled with the provider's published
-      plan documentation.
+    price: '0.00'
+    currency: USD
+    billing_period: none (pay as you go)
+    description: >-
+      The default plan on every new account, shown as "Free Plan" in the console until you
+      subscribe. No commitment; top up credits from $10.
     entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
+      - label: Monthly credits
+        name: monthly_credits
         type: quota
-        metric: requests
-        limit: 1000
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
+        metric: credits_usd
+        limit: 0
+        note: Pay as you go — buy credits, starting at a $10 top-up.
+      - label: Rate limit
         name: rate_limit
         type: rate
         metric: requests_per_minute
-        limit: 10
+        limit: 60
         timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
+        note: >-
+          Per the pricing page. The docs rate-limits page publishes 5 RPM for "Free"
+          instead — see rate-limits/segmind-rate-limits.yml for the unresolved conflict.
+      - label: Storage
+        name: storage
+        type: quota
+        metric: gigabytes
+        limit: 1
     elements:
-      - name: Public Documentation
-      - name: Community Support
-      - name: Sandbox Access
-      - name: Segmind
+      - name: All Model APIs
+      - name: 5 PixelFlows
+      - name: Community support (Discord)
+      - name: Topup credits
   - id: segmind-pro
-    name: Professional
+    name: Pro
     type: paid
-    description: Production tier for Segmind. Provides higher quotas, priority support, and access to
-      the broader API portfolio. Pricing placeholder; align with the provider's pricing page.
+    price: '39.00'
+    currency: USD
+    billing_period: month
+    description: >-
+      For professionals and small teams building rapid prototypes. $39 buys $50 of monthly
+      credits, so the allowance is worth more than the subscription.
     entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
+      - label: Monthly credits
+        name: monthly_credits
         type: quota
-        metric: requests
-        limit: 100000
+        metric: credits_usd
+        limit: 50
         timeFrame: month
-        geo: global
-        domains: []
-        unit: 1
-        price: TBD
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
+      - label: Rate limit
         name: rate_limit
         type: rate
         metric: requests_per_minute
-        limit: 100
+        limit: 120
         timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
-        type: metered
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1000
-        price: TBD
-        userMultiplied: false
+      - label: Storage
+        name: storage
+        type: quota
+        metric: gigabytes
+        limit: 10
     elements:
-      - name: All Production Endpoints
-      - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
-      - name: Segmind
+      - name: PixelFlows basic templates
+      - name: 5 business days support
+      - name: Topup credits
+  - id: segmind-business
+    name: Business
+    type: paid
+    price: '99.00'
+    currency: USD
+    billing_period: month
+    description: For production environments and professional use cases.
+    entries:
+      - label: Monthly credits
+        name: monthly_credits
+        type: quota
+        metric: credits_usd
+        limit: 99
+        timeFrame: month
+      - label: Rate limit
+        name: rate_limit
+        type: rate
+        metric: requests_per_minute
+        limit: 500
+        timeFrame: minute
+      - label: Storage
+        name: storage
+        type: quota
+        metric: gigabytes
+        limit: 100
+    elements:
+      - name: PixelFlow premium templates
+      - name: 2 business day support
+      - name: Teams
+      - name: Dedicated GPUs
+      - name: Optional Business Support Package add-on ($800/mo, $667/mo billed annually)
+  - id: segmind-scale
+    name: Scale
+    type: paid
+    price: '599.00'
+    currency: USD
+    billing_period: month
+    description: For large companies requiring custom solutions and private deployments.
+    entries:
+      - label: Monthly credits
+        name: monthly_credits
+        type: quota
+        metric: credits_usd
+        limit: 599
+        timeFrame: month
+      - label: Rate limit
+        name: rate_limit
+        type: rate
+        metric: requests_per_minute
+        limit: 1000
+        timeFrame: minute
+        note: Published as "1000 RPM pooled".
+      - label: Storage
+        name: storage
+        type: quota
+        metric: terabytes
+        limit: 1
+    elements:
+      - name: 1 business day support
+      - name: Detailed usage analytics
+      - name: Teams
+      - name: Dedicated GPUs
   - id: segmind-enterprise
     name: Enterprise
     type: enterprise
-    description: Custom-negotiated tier for Segmind. Includes dedicated capacity, contractual SLAs, security
-      review, data residency options, and named technical account management.
+    price: custom
+    currency: USD
+    billing_period: negotiated
+    description: >-
+      Custom solutions with enterprise-grade security and support. Sold through Contact
+      Sales; white-glove onboarding, PixelFlow workflow design and dedicated endpoints are
+      scoped into this plan.
     entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
+      - label: Monthly credits
+        name: monthly_credits
         type: quota
-        metric: requests
+        metric: credits_usd
         limit: -1
-        timeFrame: month
-        geo: configurable
-        domains: []
-        unit: 1
-        price: custom
-        userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
+        note: Custom.
+      - label: Rate limit
         name: rate_limit
         type: rate
         metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
-        geo: configurable
-        domains: []
-        unit: 1
-        price: custom
-        userMultiplied: false
+        limit: -1
+        note: Custom.
     elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
-      - name: Segmind
+      - name: 99.99% SLA
+      - name: Dedicated Slack support
+      - name: SOC 2 compliance
+      - name: Enterprise Support Package (custom pricing)
+consumption_pricing:
+  dedicated_endpoints:
+    description: >-
+      Dedicated GPU endpoints are billed for the GPU rather than per call, with a baseline
+      hourly rate and an autoscaling per-second rate.
+    source: https://www.segmind.com/pricing
+    gpus:
+      - gpu: H100
+        baseline_per_hour: '9.00'
+        autoscaling_per_second: '0.00310'
+      - gpu: A100
+        baseline_per_hour: '4.32'
+        autoscaling_per_second: '0.00162'
+      - gpu: L40
+        baseline_per_hour: '2.66'
+        autoscaling_per_second: '0.00106'
+      - gpu: A40
+        baseline_per_hour: '1.73'
+        autoscaling_per_second: '0.00068'
+      - gpu: A5000
+        baseline_per_hour: '0.68'
+        autoscaling_per_second: '0.00024'
+      - gpu: A6000
+        baseline_per_hour: '1.73'
+        autoscaling_per_second: '0.00068'
+  media_editing:
+    description: >-
+      The deterministic media-editing endpoints (/v2/timeline, /v2/video-split,
+      /v2/video-thumbnail, /v2/video-gif-extract, /v2/video-format-convert,
+      /v2/image-compress) each cost $0.0002 per job.
+    source: https://docs.segmind.com/docs/serverless-api/video-editing
+  per_model:
+    description: >-
+      Per-model prices are published per model rather than in one table — each model page
+      carries a pricing tab, and www.segmind.com/llms.txt lists an average cost and average
+      latency for every model in the catalogue (captured in llms/segmind-llms.txt).
+    source: https://www.segmind.com/llms.txt
+credit_expiry:
+  description: >-
+    Credits are held in batches, one per purchase or grant, and a batch can carry its own
+    expiry date. Spending draws down the batch closest to expiring first. Once a batch
+    expires it is removed and the balance drops; expired credits cannot be refunded.
+  source: https://docs.segmind.com/docs/platform/refund-policy
+auto_recharge:
+  description: >-
+    A saved card can top the balance up automatically whenever it falls below a
+    user-defined threshold, so requests do not start failing mid-run.
+  source: https://docs.segmind.com/docs/platform/pricing-and-billing
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

@@ -1,0 +1,79 @@
+generated: '2026-08-27'
+method: searched
+source: https://docs.segmind.com/docs/serverless-api/webhooks
+type: Webhooks
+asyncapi_published: false
+note: >-
+  Segmind documents a webhook surface but publishes no AsyncAPI document, no event schema
+  and no payload example — the docs name the events and where to register a URL, and stop
+  there. This file captures the catalogue as published; it is not an AsyncAPI substitute
+  and nothing here has been invented.
+registration:
+  console: https://platform.segmind.com/webhooks
+  console_path: Developer -> Webhooks
+  sdk:
+    language: python
+    package: segmind
+    methods:
+      - 'segmind.webhooks.get() — list registrations'
+      - 'segmind.webhooks.add(webhook_url, event_types)'
+      - 'segmind.webhooks.update(webhook_id, webhook_url, event_types)'
+      - 'segmind.webhooks.delete(webhook_id)'
+      - 'segmind.webhooks.logs(webhook_id) — delivery history for one registration'
+    note: >-
+      logs() is the documented way to distinguish "never sent" from "sent and your
+      endpoint rejected it". No REST endpoint for webhook registration is documented — the
+      console and the Python SDK are the only published management surfaces.
+transport:
+  method: POST
+  direction: provider-to-consumer
+  target: a URL registered by the consumer
+delivery:
+  retries: not documented
+  signing: not documented
+  secret: not documented
+  ordering: not documented
+  idempotency: not documented
+events:
+  - name: NODE_RUN
+    status: active
+    scope: PixelFlow
+    description: Sent whenever an API node inside a PixelFlow workflow runs.
+    payload_schema: not published
+    note: Outputs are delivered as URLs.
+  - name: GRAPH_RUN
+    status: active
+    scope: PixelFlow
+    description: Sent once a workflow API has finished all processing.
+    payload_schema: not published
+  - name: DATA_PROCESSING
+    status: deprecated
+    scope: Fine-tuning
+    description: Fine-tuning dataset processing event.
+  - name: TRAINING_INITIATED
+    status: deprecated
+    scope: Fine-tuning
+  - name: TRAINING_COMPLETED
+    status: deprecated
+    scope: Fine-tuning
+  - name: DEPLOYING
+    status: deprecated
+    scope: Fine-tuning
+  - name: AVAILABLE
+    status: deprecated
+    scope: Fine-tuning
+deprecation_note: >-
+  The five fine-tuning events are documented "for existing integrations only" — the
+  fine-tuning service no longer accepts new training jobs. Only NODE_RUN and GRAPH_RUN are
+  live event types for new work.
+coverage_gap:
+  summary: >-
+    Webhooks cover PixelFlow workflow runs only. There is NO webhook for a plain model
+    inference job on the AI Gateway — a v2 async inference must be followed by polling
+    /v2/requests/{id}/status. The async-inference docs recommend "webhooks for
+    fire-and-forget jobs", but the webhooks page publishes no gateway inference event, so
+    an agent submitting a long video job has polling as its only documented completion
+    signal.
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -3,85 +3,148 @@ specificationVersion: '0.1'
 schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
 provider: Segmind
 providerId: segmind
+generated: '2026-08-27'
+method: searched
+source: >-
+  https://docs.segmind.com/docs/serverless-api/rate-limits,
+  https://www.segmind.com/pricing,
+  https://docs.segmind.com/docs/get-started/authentication,
+  https://docs.segmind.com/docs/platform/account-and-billing-apis
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-08-27'
 tags:
   - Rate Limiting
   - Quotas
   - Throttling
-description: Machine-readable rate limit definitions for the Segmind API surface. Captures per-tier quotas,
-  burst behavior, response signaling, and recovery semantics. Defaults are scaffold values to be replaced
-  with published provider limits.
+description: >-
+  Published rate limits for the Segmind AI Gateway, harvested from the provider's own
+  rate-limits documentation, pricing page and authentication guide on 2026-08-27. This
+  replaces the 2026-05-04 scaffold, whose tier numbers were placeholders.
+limit_count: 7
+conflict:
+  status: unresolved
+  summary: >-
+    Segmind publishes two different per-minute rate-limit tables and they do not agree.
+    The docs rate-limits page gives Free 5 RPM / Pro 50 RPM / Enterprise custom; the
+    pricing page gives Flexible 60 RPM / Pro 120 RPM / Business 500 RPM / Scale 1000 RPM
+    pooled. The plan names also differ — the docs table has no Business or Scale row at
+    all, and the pricing page has no "Free" plan (the entry tier is Flexible, shown as
+    "Free Plan" in the console until you subscribe). Both figures are recorded below
+    against the page that publishes them. An integrator cannot tell from Segmind's public
+    surface which one the gateway enforces.
+  sources:
+    - https://docs.segmind.com/docs/serverless-api/rate-limits
+    - https://www.segmind.com/pricing
 headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
+  reset: x-rate-limit-reset-at-utc
+  note: >-
+    The only rate-limit header Segmind documents is `x-rate-limit-reset-at-utc`, returned
+    on v1 synchronous responses and described as "when your current rate-limit window
+    resets". No X-RateLimit-Limit / X-RateLimit-Remaining / RateLimit-Policy / Retry-After
+    header is documented, and the v2 async `metrics` object carries cost and timing but no
+    rate-limit fields. An agent therefore cannot read its remaining budget from a response
+    — only when the window resets.
+  limit: null
+  remaining: null
+  retryAfter: null
+  policy: null
 responseCodes:
   throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
+  quotaExceeded: 406
+  note: >-
+    429 `rate_limit_exceeded` on throttling. Running out of credits is a separate
+    condition and returns 406 with an "Insufficient credits" error naming both the balance
+    and what the call needed — not 429.
 limits:
   - tier: free
-    name: Free Tier Default
+    plan: Free
+    name: Docs rate-limits page — Free
     scope: api-key
     metric: requests_per_minute
-    limit: 10
-    burst: 20
+    limit: 5
     timeFrame: minute
-    applies:
-      - Segmind
+    source: https://docs.segmind.com/docs/serverless-api/rate-limits
+  - tier: professional
+    plan: Pro
+    name: Docs rate-limits page — Pro
+    scope: api-key
+    metric: requests_per_minute
+    limit: 50
+    timeFrame: minute
+    source: https://docs.segmind.com/docs/serverless-api/rate-limits
   - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - Segmind
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
+    plan: Flexible
+    name: Pricing page — Flexible (pay as you go)
+    scope: account
     metric: requests_per_minute
-    limit: 100
-    burst: 200
+    limit: 60
     timeFrame: minute
-    applies:
-      - Segmind
+    source: https://www.segmind.com/pricing
   - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - Segmind
+    plan: Pro
+    name: Pricing page — Pro
+    scope: account
+    metric: requests_per_minute
+    limit: 120
+    timeFrame: minute
+    source: https://www.segmind.com/pricing
+  - tier: business
+    plan: Business
+    name: Pricing page — Business
+    scope: account
+    metric: requests_per_minute
+    limit: 500
+    timeFrame: minute
+    source: https://www.segmind.com/pricing
+  - tier: scale
+    plan: Scale
+    name: Pricing page — Scale (pooled)
+    scope: account
+    metric: requests_per_minute
+    limit: 1000
+    timeFrame: minute
+    pooled: true
+    source: https://www.segmind.com/pricing
   - tier: enterprise
-    name: Enterprise Negotiated Limit
+    plan: Enterprise
+    name: Enterprise — custom
     scope: contract
     metric: requests_per_minute
-    limit: 1000
-    burst: 5000
+    limit: null
     timeFrame: minute
-    applies:
-      - Segmind
+    note: Published as "Custom" on both the docs table and the pricing page.
+    source: https://www.segmind.com/pricing
+auth_surface_limits:
+  - name: Authentication endpoints
+    scope: ip
+    metric: requests_per_minute
+    limit: 5
+    timeFrame: minute
+    source: https://docs.segmind.com/docs/get-started/authentication
+  - name: Token refresh
+    scope: user
+    metric: requests_per_hour
+    limit: 10
+    timeFrame: hour
+    source: https://docs.segmind.com/docs/get-started/authentication
 policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
+  - name: Retry guidance
+    description: >-
+      The authentication docs tell clients to implement retry with exponential backoff and
+      to handle token expiration gracefully. No Retry-After header is documented to back
+      that up, so the backoff is entirely client-side.
+    source: https://docs.segmind.com/docs/get-started/authentication
+  - name: Dedicated endpoints bypass the shared limit
+    description: >-
+      Dedicated GPU endpoints are billed per GPU-hour or per GPU-second rather than per
+      call, and the pricing page describes them as "Unlimited API requests with dedicated
+      endpoints". They are a separate control plane on api.spotprod.segmind.com.
+    source: https://www.segmind.com/pricing
+  - name: Why limits exist
+    description: >-
+      Segmind states the purpose as security (abuse mitigation), fair access (no single
+      consumer monopolising capacity), and performance optimisation under spikes.
+    source: https://docs.segmind.com/docs/serverless-api/rate-limits
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com

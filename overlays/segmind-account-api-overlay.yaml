@@ -1,0 +1,54 @@
+# yaml-language-server: $schema=https://spec.openapis.org/overlay/1.0.0/schema.json
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Segmind Account Api
+  version: 1.0.0
+x-provenance:
+  generated: '2026-08-27'
+  method: generated
+  source: >-
+    https://docs.segmind.com/ (Segmind's own documentation), applied over
+    openapi/segmind-account-api-openapi.yml in this repo.
+  note: >-
+    This overlay records API Evangelist's enhancements. It never mutates
+    openapi/segmind-account-api-openapi.yml, and it adds only facts published by Segmind in its
+    documentation.
+extends: ../openapi/segmind-account-api-openapi.yml
+actions:
+  - target: $.info
+    description: Record where the runtime semantics for this API are documented. Segmind publishes no OpenAPI of its own; these enhancements come from its documentation.
+    update:
+      x-docs: https://docs.segmind.com/docs/serverless-api
+      x-error-catalog: errors/segmind-error-codes.yml
+      x-conventions: conventions/segmind-conventions.yml
+      x-rate-limits: rate-limits/segmind-rate-limits.yml
+      x-authentication: authentication/segmind-authentication.yml
+      x-lifecycle: lifecycle/segmind-lifecycle.yml
+  - target: $.components.securitySchemes.apiKeyAuth
+    description: >-
+      Document the published key format and the fact that the gateway rejects the same key
+      as a bearer token.
+    update:
+      description: >-
+        Segmind API key. Prefix "SG_" followed by 16 hexadecimal characters (19 characters
+        total). The gateway does NOT accept this key as a bearer token — sending it in an
+        Authorization header returns 401 on every endpoint. Create and revoke keys at
+        https://platform.segmind.com/api-keys.
+      x-key-prefix: SG_
+      x-verification-endpoint: https://api.segmind.com/v1/get-user-credits
+  - target: $.paths['/v1/get-user-credits'].get
+    description: >-
+      Document the real response shape, the cost of calling it, and the two distinct 401
+      conditions.
+    update:
+      x-cost: none — runs no model
+      x-safe-to-retry: true
+      x-response-fields:
+        credits: spendable balance, matching Credits Balance in the console
+        free-credits: free-credit balance, reported separately
+      x-error-conditions:
+        '401 (no key)': '{"error": "Missing Authorization or x-api-key in header"}'
+        '401 (bad key)': '{"error": "Unauthorized. API key is invalid or may have expired..."}'
+        '404': '{"error": "No credits found for the user"}'
+      x-note: >-
+        Balances are per workspace, so switching teams changes which balance is returned.

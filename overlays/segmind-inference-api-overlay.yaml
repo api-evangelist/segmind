@@ -1,0 +1,85 @@
+# yaml-language-server: $schema=https://spec.openapis.org/overlay/1.0.0/schema.json
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Segmind Inference Api
+  version: 1.0.0
+x-provenance:
+  generated: '2026-08-27'
+  method: generated
+  source: >-
+    https://docs.segmind.com/ (Segmind's own documentation), applied over
+    openapi/segmind-inference-api-openapi.yml in this repo.
+  note: >-
+    This overlay records API Evangelist's enhancements. It never mutates
+    openapi/segmind-inference-api-openapi.yml, and it adds only facts published by Segmind in its
+    documentation.
+extends: ../openapi/segmind-inference-api-openapi.yml
+actions:
+  - target: $.info
+    description: Record where the runtime semantics for this API are documented. Segmind publishes no OpenAPI of its own; these enhancements come from its documentation.
+    update:
+      x-docs: https://docs.segmind.com/docs/serverless-api
+      x-error-catalog: errors/segmind-error-codes.yml
+      x-conventions: conventions/segmind-conventions.yml
+      x-rate-limits: rate-limits/segmind-rate-limits.yml
+      x-authentication: authentication/segmind-authentication.yml
+      x-lifecycle: lifecycle/segmind-lifecycle.yml
+  - target: $.components.securitySchemes.apiKeyAuth
+    description: >-
+      Document the published key format and the fact that the gateway rejects the same key
+      as a bearer token.
+    update:
+      description: >-
+        Segmind API key. Prefix "SG_" followed by 16 hexadecimal characters (19 characters
+        total). The gateway does NOT accept this key as a bearer token — sending it in an
+        Authorization header returns 401 on every endpoint. Create and revoke keys at
+        https://platform.segmind.com/api-keys.
+      x-key-prefix: SG_
+      x-verification-endpoint: https://api.segmind.com/v1/get-user-credits
+  - target: $.paths['/v1/{model_name}'].post
+    description: >-
+      Record that v1 is in maintenance mode and that it returns raw output bytes with
+      accounting in response headers.
+    update:
+      x-lifecycle-status: maintenance
+      x-response-body: raw model output bytes (e.g. image/jpeg), not JSON
+      x-response-headers:
+        x-cost: credits charged for this request
+        x-remaining-credits: balance after this request
+        x-request-id: request id, as listed in the console Generations view
+        x-generation-time: model processing time in seconds
+        x-seed-value: the seed used, where the model reports one
+        x-rate-limit-reset-at-utc: when the current rate-limit window resets
+      x-idempotent: false
+      x-billed-on: 'HTTP 200 only'
+  - target: $.paths['/v2/{model_name}'].post
+    description: >-
+      Record the async job contract, its non-idempotency and its billing rule — the single
+      most consequential runtime fact about this operation.
+    update:
+      x-lifecycle-status: current
+      x-idempotent: false
+      x-retry-guidance: >-
+        Retry the submit ONLY on a 5xx from the submit itself; a retry produces a new
+        request_id and a second billable job. Never re-POST after a successful submit.
+      x-billed-on: 'HTTP 200 only; a failed job returns 422 with no cost field'
+      x-poll-interval-seconds: 1
+      x-poll-deadline-seconds: 600
+      x-status-values: [QUEUED, PROCESSING, COMPLETED, FAILED]
+  - target: $.paths['/v2/requests/{request_id}/status'].get
+    description: Mark the lightweight poll endpoint as the one to use while waiting.
+    update:
+      x-safe-to-retry: true
+      x-preferred-for-polling: true
+      x-omits-output-payload: true
+  - target: $.paths['/v2/requests/{request_id}'].get
+    description: Record output-URL expiry, which cannot be recovered once the request record ages out.
+    update:
+      x-safe-to-retry: true
+      x-output-host: images.segmind.com
+      x-output-retention-days: 7
+      x-output-url-public: true
+      x-warning: >-
+        Save the output URL when you fetch the result. The request record expires before
+        the output file does; after that all poll endpoints return 404 and the URL cannot
+        be recovered from the API.
