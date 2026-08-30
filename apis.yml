@@ -59,6 +59,9 @@ url: >-
   https://raw.githubusercontent.com/api-evangelist/segmind/refs/heads/main/apis.yml
 specificationVersion: '0.23'
 common:
+  - type: CapabilityMap
+    url: capabilities/segmind-capability-edges.yml
+    name: Segmind Business Capability Map
   - type: Website
     url: https://www.segmind.com/
   - type: DeveloperPortal

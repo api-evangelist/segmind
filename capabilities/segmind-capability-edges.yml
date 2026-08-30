@@ -1,0 +1,34 @@
+slug: segmind
+provider: Segmind
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Electrical Components & Equipment
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Fine-tuning
+  spec_file: segmind-fine-tuning-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.85
+  evidence: POST /finetune/request/submit  submitFinetune  Initiate a fine-tuning job; downloadFinetuneFile  Download
+    trained model weights
+  reason: Submitting fine-tuning jobs, managing training data upload, model access and trained weights
+    is ML model lifecycle management (AI/ML model lifecycle, MLOps).
+- tag: Inference
+  spec_file: segmind-inference-api-openapi.yml
+  capability_id: BC-610.60
+  capability_id_l1: BC-610
+  capability_name: Artificial Intelligence Management
+  confidence: 0.8
+  evidence: POST /v2/{model_name}  invokeModelAsync  Asynchronous model inference
+  reason: Synchronous and asynchronous invocation of AI models plus job status/result retrieval is AI
+    model serving — part of the AI/ML model lifecycle capability.
