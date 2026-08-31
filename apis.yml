@@ -42,6 +42,19 @@ access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/segmind.png
 tags:
 - Artificial Intelligence
+- Machine-Learning
+- Generative AI
+- Inference
+- Image-Generation
+- Video Generation
+- Text-to-Image
+- Text-to-Video
+- Serverless
+- GPU
+- Workflows
+- Fine-Tuning
+tags_raw:
+- Artificial Intelligence
 - Machine Learning
 - Generative AI
 - Inference
@@ -246,7 +259,7 @@ apis:
   humanURL: https://docs.segmind.com/docs/fine-tuning
   baseURL: https://api.segmind.com
   tags:
-  - Fine-Tuning
+  - Fine-tuning
   tags_raw:
   - Fine-tuning
   properties:
