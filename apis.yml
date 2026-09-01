@@ -259,7 +259,7 @@ apis:
   humanURL: https://docs.segmind.com/docs/fine-tuning
   baseURL: https://api.segmind.com
   tags:
-  - Fine-tuning
+  - Fine-Tuning
   tags_raw:
   - Fine-tuning
   properties:
