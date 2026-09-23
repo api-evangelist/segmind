@@ -1,10 +1,7 @@
 {
   "provider": "segmind",
   "sources": [
-    "segmind-account-api-openapi.yml",
-    "segmind-fine-tuning-api-openapi.yml",
-    "segmind-inference-api-openapi.yml",
-    "segmind-storage-api-openapi.yml"
+    "_original/segmind-openapi.yml"
   ],
   "outputs": [
     "segmind-account-api-openapi.yml",
@@ -16,11 +13,14 @@
   "errors": [],
   "warnings": [],
   "notes": [
-    "segmind-account-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "segmind-fine-tuning-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "segmind-inference-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
-    "segmind-storage-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "segmind-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "apis.yml register: already-registered"
   ],
-  "skipped": []
+  "skipped": [
+    "segmind-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "segmind-fine-tuning-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "segmind-inference-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "segmind-storage-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

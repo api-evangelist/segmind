@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Segmind Account Storage API
+  title: Segmind Storage API
   description: Segmind provides API access to top AI models for rapid prototyping and deployment, including synchronous and asynchronous model inference, fine-tuning, and asset upload. Authenticated with an API key header.
   version: '1'
   contact:

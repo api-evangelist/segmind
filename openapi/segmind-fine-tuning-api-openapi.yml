@@ -1,6 +1,6 @@
 openapi: 3.2.0
 info:
-  title: Segmind Account Fine Tuning API
+  title: Segmind Fine Tuning API
   description: Segmind provides API access to top AI models for rapid prototyping and deployment, including synchronous and asynchronous model inference, fine-tuning, and asset upload. Authenticated with an API key header.
   version: '1'
   contact:
@@ -14,13 +14,13 @@ servers:
 security:
 - apiKeyAuth: []
 tags:
-- name: Fine-tuning
+- name: Fine Tuning
   description: Fine-tuning request management and data handling
 paths:
   /finetune/request/submit:
     post:
       tags:
-      - Fine-tuning
+      - Fine Tuning
       summary: Initiate a fine-tuning job
       operationId: submitFinetune
       requestBody:
@@ -36,7 +36,7 @@ paths:
   /finetune/request/details:
     get:
       tags:
-      - Fine-tuning
+      - Fine Tuning
       summary: Get details for a fine-tune request
       operationId: getFinetuneDetails
       parameters:
@@ -51,7 +51,7 @@ paths:
   /finetune/request/list:
     get:
       tags:
-      - Fine-tuning
+      - Fine Tuning
       summary: List fine-tuning requests
       operationId: listFinetuneRequests
       responses:
@@ -60,7 +60,7 @@ paths:
   /finetune/request/access-update:
     put:
       tags:
-      - Fine-tuning
+      - Fine Tuning
       summary: Update fine-tuned model access (public/private)
       operationId: updateFinetuneAccess
       requestBody:
@@ -83,7 +83,7 @@ paths:
   /finetune/request/upload/pre-signed-url:
     get:
       tags:
-      - Fine-tuning
+      - Fine Tuning
       summary: Obtain a pre-signed upload URL for fine-tune data
       operationId: getFinetuneUploadUrl
       responses:
@@ -92,7 +92,7 @@ paths:
   /finetune/request/file/download:
     get:
       tags:
-      - Fine-tuning
+      - Fine Tuning
       summary: Download trained model weights
       operationId: downloadFinetuneFile
       parameters:
