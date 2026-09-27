@@ -42,10 +42,10 @@ access: 3rd-Party
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/segmind.png
 tags:
 - Artificial Intelligence
-- Machine-Learning
+- Machine Learning
 - Generative AI
 - Inference
-- Image-Generation
+- Image Generation
 - Video Generation
 - Text-to-Image
 - Text-to-Video
@@ -66,6 +66,8 @@ tags_raw:
 - GPU
 - Workflows
 - Fine-Tuning
+- Machine-Learning
+- Image-Generation
 created: '2025-03-01'
 modified: '2026-08-27'
 url: >-
