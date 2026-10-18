@@ -47,8 +47,6 @@ tags:
 - Inference
 - Image Generation
 - Video Generation
-- Text-to-Image
-- Text-to-Video
 - Serverless
 - GPU
 - Workflows
@@ -68,6 +66,8 @@ tags_raw:
 - Fine-Tuning
 - Machine-Learning
 - Image-Generation
+- Text-to-Image
+- Text-to-Video
 created: '2025-03-01'
 modified: '2026-08-27'
 url: >-
