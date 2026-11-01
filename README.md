@@ -1,4 +1,4 @@
-# Segmind (segmind)
+# Segmind
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,42 +64,168 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-We put the AI in API, delivering top AI models for rapid prototyping and seamless deployment, ready to scale up as needed.
+Segmind is a serverless GPU inference platform that puts 200+ generative AI models — image, video, audio, 3D and LLM — behind one REST gateway with a single API key. Calls are metered per GPU-second or per generation against a prepaid credit balance, with the cost of every request reported inline on the response. The v2 asynchronous API is a submit-poll-fetch job contract built for long-running video and upscaling work, while the v1 synchronous route remains for fast models. Alongside the gateway, PixelFlow is a visual workflow builder that chains models on a canvas and publishes any workflow as its own production REST API, and dedicated endpoints run a chosen model on reserved GPUs with autoscaling. A first-party Python SDK, a browser playground, media-editing endpoints and a weekly dated changelog round out the developer surface.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/segmind/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/segmind/refs/heads/main/apis.yml)
+**Areas:** Artificial Intelligence · Machine Learning · Generative AI · Inference · Image Generation · Video Generation · Serverless · GPU · Workflows · Fine-Tuning
 
-## Scope
+## Segmind on APIs.io
 
-- **Type:** Index
-- **Position:** Consumer
-- **Access:** 3rd-Party
+Everything profiled for Segmind is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/segmind/](https://apis.io/providers/segmind/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### APIs (7)
 
-- **Created:** 2025-03-01
-- **Modified:** 2026-03-16
+- [Segmind](https://apis.io/apis/segmind/segmind/) — The Segmind AI Gateway — one REST surface in front of 200+ generative AI models for image, video, audio, 3D and text, authenticated with a single API key…
+- [Segmind Inference API](https://apis.io/apis/segmind/segmind-inference-api/) — Synchronous (v1) and asynchronous (v2) model inference. v2 is the current contract — submit a job, poll a lightweight status endpoint, fetch the result —…
+- [Segmind Account API](https://apis.io/apis/segmind/segmind-account-api/) — Read the account's spendable and free credit balance. Runs no model and costs nothing, and is the documented way to verify that an API key works.
+- [Segmind Storage API](https://apis.io/apis/segmind/segmind-storage-api/) — Upload a file to Segmind Storage and get a reusable URL to pass as an image input to any model, instead of re-uploading the same file. Served from the…
+- [Segmind PixelFlow Workflow API](https://apis.io/apis/segmind/segmind-workflow-api/) — Call a published PixelFlow workflow over REST. Submit to POST /workflows/v2/{slug} with the key names given to the workflow's input nodes, poll the status…
+- [Segmind Dedicated Endpoints API](https://apis.io/apis/segmind/segmind-endpoints-api/) — Manage dedicated GPU endpoints programmatically — list, add, update capacity and delete. Served from a separate control-plane host and authenticated with…
+- [Segmind Fine-tuning API](https://apis.io/apis/segmind/segmind-fine-tuning-api/) — DEPRECATED. Fine-tuning request management and data handling. Segmind's fine-tuning service no longer accepts new training jobs; existing fine-tuned models…
 
-## APIs
+### Published properties
 
-### Segmind
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-We put the AI in API, delivering top AI models for rapid prototyping and seamless deployment, ready to scale up as needed.
+#### AsyncAPI (1)
 
-- **Human URL:** [ https://www.segmind.com/]( https://www.segmind.com/)
+Event-driven and webhook contracts.
 
-#### Properties
+- [Segmind Webhooks](https://apis.io/asyncapis/segmind/segmind-webhooks/)
 
-- [Documentation]( https://www.segmind.com/)
-- [Postman Collection](collections/segmind.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/segmind.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### MCP servers (1)
 
-## Common Properties
+Model Context Protocol servers that expose the API to agents.
 
-- [GitHub Organization](https://github.com/segmind)
-- [LinkedIn](https://www.linkedin.com/company/segmind)
-- [L L Ms Txt](https://www.segmind.com/llms.txt)
+- [segmind-mcp.yml](https://apis.io/servers/segmind/segmind-mcp-yml/)
 
-## Maintainers
+#### Agentic access (1)
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Segmind Agentic Access](https://apis.io/agentic-access/segmind/segmind-agentic-access/)
+
+#### Collections (5)
+
+Postman and Open Collection request collections.
+
+- [Segmind API](https://apis.io/collections/segmind/open-segmind/)
+- [Segmind Account API](https://apis.io/collections/segmind/open-segmind-account-api/)
+- [Segmind Account Fine-tuning API](https://apis.io/collections/segmind/open-segmind-fine-tuning-api/)
+- [Segmind Account Inference API](https://apis.io/collections/segmind/open-segmind-inference-api/)
+- [Segmind Account Storage API](https://apis.io/collections/segmind/open-segmind-storage-api/)
+
+#### Overlays (8)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Segmind Account Api Overlay](https://apis.io/overlays/segmind/segmind-account-api-overlay/)
+- [Segmind Account Api Phrasing Overlay](https://apis.io/overlays/segmind/segmind-account-api-phrasing-overlay/)
+- [Segmind Fine Tuning Api Overlay](https://apis.io/overlays/segmind/segmind-fine-tuning-api-overlay/)
+- [Segmind Fine Tuning Api Phrasing Overlay](https://apis.io/overlays/segmind/segmind-fine-tuning-api-phrasing-overlay/)
+- [Segmind Inference Api Overlay](https://apis.io/overlays/segmind/segmind-inference-api-overlay/)
+- [Segmind Inference Api Phrasing Overlay](https://apis.io/overlays/segmind/segmind-inference-api-phrasing-overlay/)
+- [Segmind Storage Api Overlay](https://apis.io/overlays/segmind/segmind-storage-api-overlay/)
+- [Segmind Storage Api Phrasing Overlay](https://apis.io/overlays/segmind/segmind-storage-api-phrasing-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Segmind Authentication](https://apis.io/security/segmind/segmind-authentication/)
+- [Segmind Domain Security](https://apis.io/security/segmind/segmind-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Segmind Scopes](https://apis.io/scopes/segmind/segmind-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Segmind Plans Pricing](https://apis.io/plans/segmind/segmind-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Segmind Rate Limits](https://apis.io/rate-limits/segmind/segmind-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Segmind Finops](https://apis.io/finops/segmind/segmind-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.segmind.com/)
+- [Documentation](https://docs.segmind.com/)
+- [Getting started](https://docs.segmind.com/docs/get-started/quickstart)
+- [API reference](https://docs.segmind.com/docs/serverless-api)
+- [Pricing](https://www.segmind.com/pricing)
+- [Sign up](https://platform.segmind.com/)
+- [Support](https://docs.segmind.com/docs/get-started/support)
+- [Blog](https://blog.segmind.com/feed)
+- [Terms of service](https://www.segmind.com/terms)
+- [Privacy policy](https://www.segmind.com/privacy)
+- [GitHub](https://github.com/segmind)
+- [Status](https://status.segmind.com)
+
+## API Evangelist rating
+
+**Kin Score 66.9** — exemplar · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 52.8 |
+| Contract governance | 18.2 |
+| Operational transparency | 73.7 |
+| Developer ergonomics | 78.6 |
+| Access clarity | 84.2 |
+
+**Agent readiness 32.0** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | bearer (partial credit) |
+| Idempotency | — |
+| Error Semantics | documented (partial credit) |
+| OpenAPI Examples | — |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | yes |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 36.4** — AI & Biometrics
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/segmind/](https://apis.io/providers/segmind/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Segmind: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/segmind/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
