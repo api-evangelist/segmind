@@ -1,0 +1,248 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://www.segmind.com/pricing
+sources:
+- https://www.segmind.com/pricing
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T120612
+  grounding: every price_text was found verbatim in the fetched page text
+audience: developer-api
+pricing_basis: tiered-subscription
+delivery:
+  delivery: managed+licensed
+  method: page
+  read: '2026-10-28'
+  evidence: For large companies that requires custom solutions and private deployments.
+  managed_tier: Pro
+published: true
+note: Subscription tiers plus pay-as-you-go credits, dedicated GPU endpoint hourly/second rates, and fine-tuning
+  GPU pricing; Flux-Pro fine-tune step pricing $3/$6/$9. Annual option gives 2 months free.
+plan_count: 15
+currency: USD
+plans:
+- name: Flexible (Pay as you go)
+  price_text: Get started with $10
+  price: 10
+  currency: USD
+  period: per-use
+  unit: credits
+  included_quota: All Model APIs, 1 GB Storage, 5 Pixelflows, 60 RPM, Community Support
+- name: Pro
+  price_text: $ 39 /mo
+  price: 39
+  currency: USD
+  period: month
+  included_quota: $50 monthly credits, 10 GB Storage, 120 RPM, Pixelflows basic, 5 business days support
+- name: Business
+  price_text: $ 99 /mo
+  price: 99
+  currency: USD
+  period: month
+  included_quota: $99 monthly credits, 100 GB Storage, 500 RPM, 2 business day support, Pixelflow Premium
+    Templates
+- name: Scale
+  price_text: $ 599 /mo
+  price: 599
+  currency: USD
+  period: month
+  included_quota: $599 monthly credits, 1 TB storage, 1000 RPM pooled, 1 business day Support, Detailed
+    usage analytics
+- name: Enterprise
+  price_text: Contact Sales
+  period: none
+  included_quota: 99.99% SLA, Dedicated Slack support, SOC 2 compliance
+- name: Business Support Package
+  price_text: $800 / mo
+  price: 800
+  currency: USD
+  period: month
+  included_quota: Shared Forward Deployed Creator; $667 / mo if paid annually
+- name: Enterprise Support Package
+  price_text: Custom pricing
+  period: none
+  included_quota: Dedicated Forward Deployed Creator, white-glove onboarding, custom SLAs
+- name: Dedicated Endpoint H100
+  price_text: $9.00/hour
+  price: 9
+  currency: USD
+  period: per-use
+  unit: hour
+  included_quota: Auto-scaling $0.00310/second
+- name: Dedicated Endpoint A100
+  price_text: $4.32/hour
+  price: 4.32
+  currency: USD
+  period: per-use
+  unit: hour
+  included_quota: Auto-scaling $0.00162/second
+- name: Dedicated Endpoint L40
+  price_text: $2.66/hour
+  price: 2.66
+  currency: USD
+  period: per-use
+  unit: hour
+  included_quota: Auto-scaling $0.00106/second
+- name: Dedicated Endpoint A40
+  price_text: $1.73/hour
+  price: 1.73
+  currency: USD
+  period: per-use
+  unit: hour
+  included_quota: Auto-scaling $0.00068/second
+- name: Dedicated Endpoint A5000
+  price_text: $0.68/hour
+  price: 0.68
+  currency: USD
+  period: per-use
+  unit: hour
+  included_quota: Auto-scaling $0.00024/second
+- name: Fine Tuning NVIDIA A100 40GB
+  price_text: $0.002/second
+  price: 0.002
+  currency: USD
+  period: per-use
+  unit: second
+- name: Fine Tuning NVIDIA H100 80GB
+  price_text: $0.0043/second
+  price: 0.0043
+  currency: USD
+  period: per-use
+  unit: second
+- name: Fine Tuning NVIDIA L40S 48GB
+  price_text: $0.0015/second
+  price: 0.0015
+  currency: USD
+  period: per-use
+  unit: second
+rate_limit_statements:
+- 60 RPM
+- 120 RPM
+- 500 RPM
+- 1000 RPM pooled
+- Unlimited API requests with dedicated endpoints
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - hybrid
+  - subscription
+  units:
+  - compute
+  - credit
+  plans:
+  - name: Flexible (Pay as you go)
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - credit
+    periods:
+    - other
+  - name: Pro
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Business
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Scale
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Enterprise
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Business Support Package
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods:
+    - month
+  - name: Enterprise Support Package
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Dedicated Endpoint H100
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
+  - name: Dedicated Endpoint A100
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
+  - name: Dedicated Endpoint L40
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
+  - name: Dedicated Endpoint A40
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
+  - name: Dedicated Endpoint A5000
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
+  - name: Fine Tuning NVIDIA A100 40GB
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
+  - name: Fine Tuning NVIDIA H100 80GB
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
+  - name: Fine Tuning NVIDIA L40S 48GB
+    access: other
+    model: hybrid
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
