@@ -5,6 +5,9 @@ artifacts:
   agentic-access/segmind-agentic-access.yml:
     method: generated
     evidence: declared in the artifact
+  ai-preferences/segmind-ai-preferences.yml:
+    method: harvested
+    evidence: declared in the artifact
   asyncapi/segmind-webhooks.yml:
     method: searched
     evidence: declared in the artifact
@@ -12,6 +15,12 @@ artifacts:
     method: searched
     evidence: declared in the artifact
   capabilities/segmind-capability-edges.yml:
+    method: unknown
+    evidence: no authorship recorded
+  certification/observations-2026-11-11.jsonl:
+    method: unknown
+    evidence: no authorship recorded
+  certification/status.yml:
     method: unknown
     evidence: no authorship recorded
   changelog/segmind-changelog.yml:
@@ -53,8 +62,14 @@ artifacts:
   conventions/segmind-conventions.yml:
     method: searched
     evidence: declared in the artifact
+  data-license/segmind-data-license.yml:
+    method: harvested
+    evidence: declared in the artifact
   data-model/segmind-data-model.yml:
     method: derived
+    evidence: declared in the artifact
+  eligibility/segmind-eligibility.yml:
+    method: harvested
     evidence: declared in the artifact
   errors/segmind-error-codes.yml:
     method: searched
@@ -71,6 +86,9 @@ artifacts:
   heartbeat/2026-11-06.yml:
     method: unknown
     evidence: no authorship recorded
+  heartbeat/2026-11-13.yml:
+    method: unknown
+    evidence: no authorship recorded
   integrations/_index.yml:
     method: generated
     evidence: carries an API Evangelist house phrase
@@ -80,7 +98,7 @@ artifacts:
   kin/checks-2026-10-23T222754.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
-  kin/checks-2026-11-02T082323.yml:
+  kin/checks-2026-11-06T143934.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-23T000603.yml:
@@ -144,6 +162,9 @@ artifacts:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-11-02T082323.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-11-06T143934.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   lifecycle/segmind-lifecycle.yml:
@@ -210,6 +231,9 @@ artifacts:
   plans/segmind-price-estimates.yml:
     method: unknown
     evidence: no authorship recorded
+  privacy/segmind-privacy-policy.yml:
+    method: harvested
+    evidence: declared in the artifact
   rate-limits/segmind-rate-limits.yml:
     method: searched
     evidence: declared in the artifact
@@ -236,6 +260,9 @@ artifacts:
     evidence: no authorship recorded
   sla/segmind-sla.yml:
     method: searched
+    evidence: declared in the artifact
+  terms/segmind-terms-of-service.yml:
+    method: harvested
     evidence: declared in the artifact
   well-known/segmind-well-known.yml:
     method: unknown
